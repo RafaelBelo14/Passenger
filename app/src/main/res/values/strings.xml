@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Passenger</string>
+    <string name="login_title">Bem-Vindo</string>
+    <string name="entrar">Entrar</string>
+    <string name="passenger">PASSENGER</string>
+    <string name="registar">Registar</string>
+    <string name="seguinte">Seguinte</string>
+</resources>

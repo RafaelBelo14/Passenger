@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/login_register_pic" />
+
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="290dp"
+        android:layout_marginLeft="40dp"
+        android:text="@string/login_title"
+        android:fontFamily="@font/sora_extrabold"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_title"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heading"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/gradient_login_register"
+        android:elevation="8dp"
+        android:padding="20dp">
+
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:text="Nome de utilizador"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_button" />
+
+        <EditText
+            android:id="@+id/inputName"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/name"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/hind_regular"
+            android:hint="Insere o teu nome de utilizador"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/text_edittext" />
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/inputName"
+            android:layout_marginBottom="5dp"
+            android:fontFamily="@font/hind_regular"
+            android:text="Palavra passe"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_button" />
+
+        <EditText
+            android:id="@+id/inputPassword"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/password"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/hind_regular"
+            android:hint="Insere a tua palavra passe"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/text_edittext" />
+
+        <Button
+            android:id="@+id/entrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/inputPassword"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/button_background"
+            android:fontFamily="@font/hind_regular"
+            android:gravity="center"
+            android:onClick="goStartMenu"
+            android:text="@string/entrar"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_button" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/entrar"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:fontFamily="@font/hind_regular"
+                android:text="Ainda não tens uma conta?"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/hind_regular"
+                android:onClick="goRegister"
+                android:text="Registar"
+                android:textColor="@color/button_entrar" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

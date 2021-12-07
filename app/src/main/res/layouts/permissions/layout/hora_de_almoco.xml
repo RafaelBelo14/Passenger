@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/hours"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:gravity="center"
+        android:fontFamily="@font/roboto_bold"
+        android:text="12:30"
+        android:textColor="@color/white"
+        android:textSize="@dimen/hour_title" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="130dp"
+        android:layout_below="@id/hours"
+        android:gravity="center"
+        android:textSize="@dimen/text_title"
+        android:fontFamily="@font/roboto_bold"
+        android:textColor="@color/white"
+        android:text="Hora do almoço" />
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/title"
+        android:gravity="center"
+        android:textSize="@dimen/text_body"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/white"
+        android:text="Bom apetite!" />
+
+    <Button
+        android:id="@+id/rejeitar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/subtitle"
+        android:layout_marginTop="60dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginRight="120dp"
+        android:background="@drawable/button_register_background"
+        android:text="Rejeitar"
+        android:onClick=""
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_button" />
+
+    <ImageView
+        android:id="@+id/arrow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_below="@id/rejeitar"
+        android:src="@drawable/arrow_swipe" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/arrow"
+        android:gravity="center"
+        android:text="Swipe para ver\nrestaurantes próximos"
+        android:textColor="@color/white"
+        android:fontFamily="@font/roboto_regular" />
+
+
+
+</RelativeLayout>

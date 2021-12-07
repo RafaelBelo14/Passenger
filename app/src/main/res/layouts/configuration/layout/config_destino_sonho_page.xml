@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="80dp"
+        android:src="@drawable/back"
+        android:onClick="goConfig3"/>
+
+    <ImageView
+        android:id="@+id/voice"
+        android:layout_below="@id/back"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/voice_line" />
+
+    <LinearLayout
+        android:id="@+id/linear1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voice"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp" >
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/hind_regular"
+            android:gravity="center"
+            android:text="Qual é o teu destino de sonho?"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_body" />
+
+        <EditText
+            android:id="@+id/inputNome"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/hind_regular"
+            android:hint="A tua resposta"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textSize="@dimen/text_edittext" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/entrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linear1"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="40dp"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/hind_regular"
+        android:gravity="center"
+        android:text="@string/seguinte"
+        android:onClick="goConfig5"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_button" />
+
+    <ImageView
+        android:id="@+id/progress"
+        android:layout_below="@id/entrar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/progress_bar" />
+
+</RelativeLayout>
