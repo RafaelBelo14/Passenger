@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="80dp"
         android:src="@drawable/back"
-        android:onClick="goConfig1"/>
+        android:onClick="backConfig1"/>
 
     <ImageView
         android:id="@+id/voice"
@@ -33,7 +33,7 @@
         android:padding="40dp" >
 
         <TextView
-            android:id="@+id/question"
+            android:id="@+id/questionRelacao"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
@@ -47,25 +47,35 @@
             android:id="@+id/linear2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal">
 
-            <CheckBox
-                android:layout_width="wrap_content"
+            <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:buttonTint="@color/edit_text"
-                android:text="Amigável"
-                android:textColor="@color/white"
-                android:layout_marginRight="40dp"
-                android:textSize="@dimen/text_choice"/>
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/edit_text"
-                android:text="Apenas guia"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_choice"/>
+                <RadioButton
+                    android:id="@+id/amiga"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:buttonTint="@color/edit_text"
+                    android:text="Amigável"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_choice"
+                    android:onClick="onRadioButtonClicked"/>
+                <RadioButton
+                    android:id="@+id/guia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/edit_text"
+                    android:text="Apenas guia"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_choice"
+                    android:onClick="onRadioButtonClicked"/>
+
+            </RadioGroup>
 
         </LinearLayout>
 

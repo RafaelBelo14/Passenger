@@ -12,15 +12,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:src="@drawable/back"
-        android:onClick="goConfig11"/>
+        android:onClick="backConfig11"/>
 
     <ImageView
         android:id="@+id/voice"
-        android:layout_below="@id/back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/back"
         android:src="@drawable/voice_line" />
 
     <LinearLayout
@@ -35,7 +35,7 @@
         android:layout_marginRight="40dp" >
 
         <TextView
-            android:id="@+id/question"
+            android:id="@+id/commentFinal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
@@ -51,23 +51,23 @@
         android:layout_below="@id/linear1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:layout_marginBottom="40dp"
         android:background="@drawable/button_background"
         android:gravity="center"
-        android:visibility="invisible"
         android:text="@string/seguinte"
+        android:onClick="goConfig13"
         android:fontFamily="@font/hind_regular"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button"/>
 
     <ImageView
         android:id="@+id/progress"
-        android:layout_below="@id/entrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="goConfig13"
+        android:layout_below="@id/entrar"
         android:src="@drawable/progress_bar" />
 
 </RelativeLayout>

@@ -42,15 +42,17 @@
         <entry key="app/src/main/res/layouts/configuration/layout/config_alergia_coment_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_comida_coment_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_comida_favorita_page.xml" value="0.3890625" />
-        <entry key="app/src/main/res/layouts/configuration/layout/config_conhecer_melhor_page.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/configuration/layout/config_conhecer_melhor_page.xml" value="0.335" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_deitar_page.xml" value="0.3890625" />
-        <entry key="app/src/main/res/layouts/configuration/layout/config_destino_coment_page.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/configuration/layout/config_deitar_page_copy.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layouts/configuration/layout/config_destino_coment_page.xml" value="0.335" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_destino_sonho_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_end_page.xml" value="0.3890625" />
-        <entry key="app/src/main/res/layouts/configuration/layout/config_final_comment_page.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/configuration/layout/config_final_comment_page.xml" value="0.25" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_name_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_refeicoes_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/configuration/layout/config_relation_page.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_deitar_page.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layouts/ludicas/layout/item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_item.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_item_detail.xml" value="0.3890625" />

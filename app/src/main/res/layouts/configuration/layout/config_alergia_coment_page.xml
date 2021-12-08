@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="60dp"
         android:src="@drawable/back"
-        android:onClick="goConfig8"/>
+        android:onClick="backConfig8"/>
 
     <ImageView
         android:id="@+id/voice"
@@ -31,12 +31,12 @@
         android:gravity="center"
         android:orientation="vertical"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="90dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp" >
 
         <TextView
-            android:id="@+id/question"
+            android:id="@+id/commentAlergiaAlimentar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
@@ -57,8 +57,8 @@
         android:layout_marginBottom="40dp"
         android:background="@drawable/button_background"
         android:gravity="center"
-        android:visibility="invisible"
         android:text="@string/seguinte"
+        android:onClick="goConfig10"
         android:fontFamily="@font/hind_regular"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button"/>
@@ -68,7 +68,6 @@
         android:layout_below="@id/entrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/progress_bar"
-        android:onClick="goConfig10"/>
+        android:src="@drawable/progress_bar" />
 
 </RelativeLayout>

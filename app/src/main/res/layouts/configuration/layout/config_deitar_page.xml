@@ -14,7 +14,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="70dp"
         android:src="@drawable/back"
-        android:onClick="goConfig9"/>
+        android:onClick="backConfig8"/>
 
     <ImageView
         android:id="@+id/voice"
@@ -36,7 +36,7 @@
         android:layout_marginRight="40dp" >
 
         <TextView
-            android:id="@+id/question"
+            android:id="@+id/questionDeitar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
@@ -46,19 +46,12 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_body" />
 
-        <EditText
-            android:id="@+id/inputNome"
-            android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/edittext_background"
-            android:fontFamily="@font/hind_regular"
-            android:hint="A tua resposta"
-            android:importantForAutofill="no"
-            android:inputType="number"
-            android:padding="10dp"
-            android:textColorHint="@color/white"
-            android:textSize="@dimen/text_edittext" />
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:theme="@style/MyTimePickerDialogStyle" />
 
     </LinearLayout>
 
@@ -83,6 +76,7 @@
         android:layout_below="@id/entrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:src="@drawable/progress_bar" />
 
 </RelativeLayout>

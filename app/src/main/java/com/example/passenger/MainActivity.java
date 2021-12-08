@@ -1,129 +1,456 @@
 package com.example.passenger;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.util.Arrays;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.SetOptions;
+
+import java.util.HashMap;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ReadNwriteDB db = null;
-    private String dirPath = "/app/src/main/";
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private String relation = null;
+    private TextToSpeech tts = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
-        initializeDB();
-        String test = Arrays.toString(db.getUserList().toArray());
-        Log.i("info", test);
-        User user = new User("Rafa", "r", "deef", "ef", "dqwdqw", new Hours(2, 3), new Hours(2, 3), new Hours(2, 3), new Hours(2, 3), 2);
-        db.addUser(user);
-        saveDB();
+        initializeFirebase();
+        initializeVoice();
     }
 
-    public void initializeDB() {
-        try {
-            readDB();
-        } catch (FileNotFoundException f) {
-            Log.i("info","Nenhuma db encontrado! A criar um...");
-            db = new ReadNwriteDB();
-        } catch (IOException | ClassNotFoundException i) {
-            Log.i("info","Erro a ler ficheiro ou classe desconhecida");
-            System.exit(0);
-        }
+    public void initializeFirebase() {
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
     }
 
-    public void saveDB() {
-        writeDB();
+    public void initializeVoice() {
+        tts = new TextToSpeech(this, initStatus -> {
+            if (initStatus == TextToSpeech.SUCCESS) {
+                tts.setLanguage(new Locale("pt", "POR"));
+                //tts.speak("Prazer em ter te aqui!", TextToSpeech.QUEUE_FLUSH, null);
+            } else {
+                Log.d("TAG", "Can't initialize TextToSpeech");
+            }
+
+        });
     }
 
-    public void readDB() throws IOException, ClassNotFoundException{
-        FileInputStream fi = new FileInputStream(new File(new File(getFilesDir(),"") + File.separator + "db.srl"));
-        ObjectInputStream oi = new ObjectInputStream(fi);
+    //----------------------------------------------------------------------------------
 
-        db = (ReadNwriteDB) oi.readObject();
-
-        oi.close();
-        fi.close();
+    public void goLogin(View view) {
+        setContentView(R.layout.login_page);
     }
-
-    public void writeDB() {
-
-        ObjectOutput out = null;
-
-        try {
-            out.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Erro a criar ficheiro...");
-        } catch (IOException e) {
-            System.out.println("Erro a escrever para o ficheiro...");
-        }
-    }
-
-    public void goLogin(View view) { setContentView(R.layout.login_page); }
     public void goRegister(View view) {
         setContentView(R.layout.register_page);
     }
 
-    //Configuration menus
-    public void goConfig1(View view) {
+    //----------------------------------------------------------------------------------
+
+    public void backConfig1(View view) {
         setContentView(R.layout.config_name_page);
     }
-    public void goConfig2(View view) {
+    @SuppressLint("SetTextI18n")
+    public void goConfig1(View view) {
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText name_layout = (EditText) findViewById(R.id.inputName);
+        EditText password_layout = (EditText) findViewById(R.id.inputPassword);
+        EditText email_layout = (EditText) findViewById(R.id.inputEmail);
+
+        String name = name_layout.getText().toString();
+        String email = email_layout.getText().toString();
+        String password = password_layout.getText().toString();
+
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    HashMap <String,String> usermap = new HashMap<>();
+
+                    usermap.put("name", name);
+                    usermap.put("email", user.getEmail());
+                    usermap.put("id", user.getUid());
+
+                    db.collection("users")
+                            .add(usermap);
+                    setContentView(R.layout.config_name_page);
+
+                    String question = ((TextView) findViewById(R.id.questionNomeAssistente)).getText().toString();
+                    TextView name_layout1 = (TextView) findViewById(R.id.heyHeading);
+                    name_layout1.setText("Olá, " + name + "!");
+                    //tts.speak(name_layout1.getText().toString() + " " + question, TextToSpeech.QUEUE_FLUSH, null);
+
+                } else {
+                    Toast.makeText(context, "Falha na autenticação!", duration).show();
+                }
+            });
+    }
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig2(View view) {
         setContentView(R.layout.config_relation_page);
     }
-    public void goConfig3(View view) {
-        setContentView(R.layout.config_conhecer_melhor_page);
+    public void goConfig2(View view) {
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        EditText assistent_name_layout = (EditText) findViewById(R.id.inputNome);
+        String assistent_name = assistent_name_layout.getText().toString();
+
+        HashMap <String,String> mapassistant = new HashMap<>();
+        if (assistent_name.equals("")) {
+            Toast.makeText(context, "Escolhe um nome!", duration).show();
+        }
+        else {
+            mapassistant.put("assistant_name", assistent_name);
+
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id",user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_relation_page);
+
+                            String question = ((TextView) findViewById(R.id.questionRelacao)).getText().toString();
+                            //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
     }
-    public void goConfig4(View view) {
+
+    //----------------------------------------------------------------------------------
+
+    @SuppressLint("NonConstantResourceId")
+    public void goConfig3(View view) {
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        HashMap<String, String> mapassistant = new HashMap<>();
+
+        if (relation == null) {
+            Toast.makeText(context, "Escolha uma opção!", duration).show();
+        }
+        else {
+            mapassistant.put("relation", relation);
+            FirebaseUser user = mAuth.getCurrentUser();
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_conhecer_melhor_page);
+
+                            String comment = ((TextView) findViewById(R.id.commentConhecerMelhor)).getText().toString();
+                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
+    }
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig4(View view) {
         setContentView(R.layout.config_destino_sonho_page);
     }
+    public void goConfig4(View view) {
+
+        setContentView(R.layout.config_destino_sonho_page);
+        String question = ((TextView) findViewById(R.id.questionDestinoSonho)).getText().toString();
+        tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+
+    }
+
+
+
+    //----------------------------------------------------------------------------------
+
+    @SuppressLint("SetTextI18n")
     public void goConfig5(View view) {
-        setContentView(R.layout.config_destino_coment_page);
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText destinoSonho_layout = (EditText) findViewById(R.id.inputDestinoSonho);
+        String destinoSonho = destinoSonho_layout.getText().toString();
+
+        HashMap<String, String> mapassistant = new HashMap<>();
+        if (destinoSonho.equals("")) {
+            Toast.makeText(context, "Digita qualquer coisa!", duration).show();
+        }
+        else {
+            mapassistant.put("destino_sonho", destinoSonho);
+            FirebaseUser user = mAuth.getCurrentUser();
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_destino_coment_page);
+
+                            TextView comment = (TextView) findViewById(R.id.comentDestinoSonho);
+                            comment.setText(destinoSonho + " " + comment.getText().toString());
+                            //tts.speak(comment.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
+    }
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig6(View view) {
+        setContentView(R.layout.config_comida_favorita_page);
     }
     public void goConfig6(View view) {
         setContentView(R.layout.config_comida_favorita_page);
+        String question = ((TextView) findViewById(R.id.questionComidaFavorita)).getText().toString();
+        tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
     }
+
+    //----------------------------------------------------------------------------------
+
     public void goConfig7(View view) {
-        setContentView(R.layout.config_comida_coment_page);
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText comidaFavorita_layout = (EditText) findViewById(R.id.inputComidaFavorita);
+        String comidaFavorita = comidaFavorita_layout.getText().toString();
+
+        HashMap<String, String> mapassistant = new HashMap<>();
+        if (comidaFavorita.equals("")) {
+            Toast.makeText(context, "Digita qualquer coisa!", duration).show();
+        }
+        else {
+            mapassistant.put("comida_favorita", comidaFavorita);
+            FirebaseUser user = mAuth.getCurrentUser();
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_comida_coment_page);
+
+                            String comment = ((TextView) findViewById(R.id.commentComidaFavorita)).getText().toString();
+                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
     }
-    public void goConfig8(View view) {
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig8(View view) {
         setContentView(R.layout.config_alergia_alimentar_page);
     }
+
+    public void goConfig8(View view) {
+        setContentView(R.layout.config_alergia_alimentar_page);
+        String question = ((TextView) findViewById(R.id.questionAlergiaALimentar)).getText().toString();
+        tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    //----------------------------------------------------------------------------------
+
     public void goConfig9(View view) {
-        setContentView(R.layout.config_alergia_coment_page);
+
+        //TODO VERIFICAR CASOS EM QUE NÃO HÁ ALERGIAS
+
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText alergiaAlimentar_layout = (EditText) findViewById(R.id.inputAlergiaAlimentar);
+        String alergiaAlimentar = alergiaAlimentar_layout.getText().toString();
+
+        HashMap<String, String> mapassistant = new HashMap<>();
+        if (alergiaAlimentar.equals("")) {
+            Toast.makeText(context, "Digita qualquer coisa!", duration).show();
+        }
+        else {
+            mapassistant.put("alergia_alimentar", alergiaAlimentar);
+            FirebaseUser user = mAuth.getCurrentUser();
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_alergia_coment_page);
+
+                            String comment = ((TextView) findViewById(R.id.commentAlergiaAlimentar)).getText().toString();
+                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
+    }
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig10(View view) {
+        setContentView(R.layout.scroll_config_deitar_page);
     }
     public void goConfig10(View view) {
-        setContentView(R.layout.config_deitar_page);
+        setContentView(R.layout.scroll_config_deitar_page);
+        String question = ((TextView) findViewById(R.id.questionDeitar)).getText().toString();
+        //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
     }
-    public void goConfig11(View view) {
+
+    //----------------------------------------------------------------------------------
+
+    public void backConfig11(View view) {
         setContentView(R.layout.config_refeicoes_page);
     }
-    public void goConfig12(View view) {
-        setContentView(R.layout.config_final_comment_page);
+    public void goConfig11(View view) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        TimePicker timePicker_layout = (TimePicker) findViewById(R.id.timePicker);
+        int timePicker_hour = timePicker_layout.getHour();
+        int timePicker_minute = timePicker_layout.getMinute();
+
+        HashMap<String, String> mapassistant = new HashMap<>();
+        mapassistant.put("hora_deitar", timePicker_hour + ":" + timePicker_minute);
+        FirebaseUser user = mAuth.getCurrentUser();
+        CollectionReference users = db.collection("users");
+        db.collection("users").whereEqualTo("id", user.getUid())
+            .get()
+            .addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                        setContentView(R.layout.config_refeicoes_page);
+
+                        String question = ((TextView) findViewById(R.id.questionRefeicoes)).getText().toString();
+                        //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                } else {
+                    Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                }
+            });
     }
+
+    //----------------------------------------------------------------------------------
+
+    public void goConfig12(View view) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText refeicoes_layout = (EditText) findViewById(R.id.inputRefeicoes);
+        String refeicoes = refeicoes_layout.getText().toString();
+
+        HashMap<String, String> mapassistant = new HashMap<>();
+        if (refeicoes.equals("")) {
+            Toast.makeText(context, "Digita qualquer coisa!", duration).show();
+        }
+        else {
+            mapassistant.put("refeicoes", refeicoes);
+            FirebaseUser user = mAuth.getCurrentUser();
+            CollectionReference users = db.collection("users");
+            db.collection("users").whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                            setContentView(R.layout.config_final_comment_page);
+
+                            String comment = ((TextView) findViewById(R.id.commentFinal)).getText().toString();
+                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    } else {
+                        Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                    }
+                });
+        }
+    }
+
     public void goConfig13(View view) {
         setContentView(R.layout.config_end_page);
+        String comment = ((TextView) findViewById(R.id.commentConfirmacao)).getText().toString();
+        //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
     }
 
-    //Talk to assistent menus
-    public void goStartMenu(View view) { setContentView(R.layout.start_assistent_page); }
+    public void goStartMenuFromRegister(View view) {
+        setContentView(R.layout.start_assistent_page);
+    }
+
+    public void goStartMenuFromLogin(View view) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+        EditText email_layout = (EditText) findViewById(R.id.inputLoginEmail);
+        EditText password_layout = (EditText) findViewById(R.id.inputLoginPassword);
+
+        String email = email_layout.getText().toString();
+        String password = password_layout.getText().toString();
+
+        mAuth.signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+
+                        //TODO CARREGA INFO DO USER PARA A ASSISTENTE
+                        setContentView(R.layout.start_assistent_page);
+                    } else {
+                        Toast.makeText(context, "Credenciais incorretas! Já estás registado?", duration).show();
+                    }
+                }
+            });
+    }
     public void goMainMenu(View view) { setContentView(R.layout.activity_main_page); }
 
-    //Restaurant menus
     public void goRestaurantList(View view) {
         setContentView(R.layout.restaurant_list);
         View inflating_view = findViewById(R.id.restaurantListViewer);
@@ -135,7 +462,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void goRestauratDetail(View view) { setContentView(R.layout.scroll_view_restaurant_item_detail); }
 
-    //Ludicas menus
     public void goLudicasList(View view) {
         setContentView(R.layout.ludicas_list);
         View inflating_view = findViewById(R.id.ludicasListViewer);
@@ -147,7 +473,6 @@ public class MainActivity extends AppCompatActivity {
     }
     public void goLudicaDetail(View view) { setContentView(R.layout.scroll_view_ludicas_item_detail); }
 
-    //Touristic menus
     public void goTouristicList(View view) {
         setContentView(R.layout.touristic_list);
         View inflating_view = findViewById(R.id.touristicListViewer);
@@ -158,5 +483,17 @@ public class MainActivity extends AppCompatActivity {
         parent.addView(inflating_view, index);
     }
     public void goTouristicDetail(View view) { setContentView(R.layout.scroll_view_touristic_item_detail); }
+
+    public void onRadioButtonClicked(View view) {
+
+        RadioButton rb1 = (RadioButton) findViewById(R.id.amiga);
+
+        if (rb1.isChecked()) {
+            relation = "amiga";
+        }
+        else {
+            relation = "guia";
+        }
+    }
 
 }

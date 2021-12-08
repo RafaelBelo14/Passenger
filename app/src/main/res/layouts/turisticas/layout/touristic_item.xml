@@ -5,7 +5,7 @@
     android:background="@drawable/edittext_background"
     android:elevation="8dp"
     android:padding="15dp"
-    android:onClick="goRestauratDetail"
+    android:onClick="goTouristicDetail"
     android:layout_margin="20dp">
 
     <LinearLayout

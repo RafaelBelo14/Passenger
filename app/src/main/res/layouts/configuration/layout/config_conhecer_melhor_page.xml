@@ -12,9 +12,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="80dp"
-        android:src="@drawable/back"
-        android:onClick="goConfig2"/>
+        android:layout_marginBottom="60dp"
+        android:onClick="backConfig2"
+        android:src="@drawable/back" />
 
     <ImageView
         android:id="@+id/voice"
@@ -31,29 +31,18 @@
         android:gravity="center"
         android:orientation="vertical"
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="70dp"
+        android:layout_marginBottom="100dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp" >
 
         <TextView
-            android:id="@+id/question"
+            android:id="@+id/commentConhecerMelhor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
             android:gravity="center"
-            android:text="Quero conhecer-te melhor."
+            android:text="Quero conhecer-te melhor.\nFala-me um pouco sobre ti!"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_body" />
-
-        <TextView
-            android:id="@+id/question"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/hind_regular"
-            android:gravity="center"
-            android:text="Fala-me um pouco sobre ti!"
-            android:textColor="@color/white"
-            android:layout_marginBottom="10dp"
             android:textSize="@dimen/text_body" />
 
     </LinearLayout>
@@ -68,8 +57,8 @@
         android:layout_marginBottom="40dp"
         android:background="@drawable/button_background"
         android:gravity="center"
-        android:visibility="invisible"
         android:text="@string/seguinte"
+        android:onClick="goConfig4"
         android:fontFamily="@font/hind_regular"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button"/>
@@ -79,7 +68,6 @@
         android:layout_below="@id/entrar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/progress_bar"
-        android:onClick="goConfig4"/>
+        android:src="@drawable/progress_bar" />
 
 </RelativeLayout>
