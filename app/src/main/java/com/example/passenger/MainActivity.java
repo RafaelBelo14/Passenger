@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //tts.speak("Prazer em ter te aqui!", TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak("Prazer em ter te aqui!", TextToSpeech.QUEUE_FLUSH, null);
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                     String question = ((TextView) findViewById(R.id.questionNomeAssistente)).getText().toString();
                     TextView name_layout1 = (TextView) findViewById(R.id.heyHeading);
                     name_layout1.setText("Olá, " + name + "!");
-                    //tts.speak(name_layout1.getText().toString() + " " + question, TextToSpeech.QUEUE_FLUSH, null);
+                    tts.speak(name_layout1.getText().toString() + " " + question, TextToSpeech.QUEUE_FLUSH, null);
 
                 } else {
                     Toast.makeText(context, "Falha na autenticação!", duration).show();
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_relation_page);
 
                             String question = ((TextView) findViewById(R.id.questionRelacao)).getText().toString();
-                            //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
 
                         }
                     } else {
@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_conhecer_melhor_page);
 
                             String comment = ((TextView) findViewById(R.id.commentConhecerMelhor)).getText().toString();
-                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
 
                         }
                     } else {
@@ -202,8 +202,6 @@ public class MainActivity extends AppCompatActivity {
         tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
 
     }
-
-
 
     //----------------------------------------------------------------------------------
 
@@ -233,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 
                             TextView comment = (TextView) findViewById(R.id.comentDestinoSonho);
                             comment.setText(destinoSonho + " " + comment.getText().toString());
-                            //tts.speak(comment.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(comment.getText().toString(), TextToSpeech.QUEUE_FLUSH, null);
 
                         }
                     } else {
@@ -279,7 +277,7 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_comida_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentComidaFavorita)).getText().toString();
-                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     } else {
                         Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
@@ -328,7 +326,7 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_alergia_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentAlergiaAlimentar)).getText().toString();
-                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     } else {
                         Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
@@ -345,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
     public void goConfig10(View view) {
         setContentView(R.layout.scroll_config_deitar_page);
         String question = ((TextView) findViewById(R.id.questionDeitar)).getText().toString();
-        //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
     }
 
     //----------------------------------------------------------------------------------
@@ -373,7 +371,7 @@ public class MainActivity extends AppCompatActivity {
                         setContentView(R.layout.config_refeicoes_page);
 
                         String question = ((TextView) findViewById(R.id.questionRefeicoes)).getText().toString();
-                        //tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
+                        tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
                     }
                 } else {
                     Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
@@ -406,7 +404,7 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_final_comment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentFinal)).getText().toString();
-                            //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
                         }
                     } else {
                         Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
@@ -415,16 +413,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //----------------------------------------------------------------------------------
+
     public void goConfig13(View view) {
         setContentView(R.layout.config_end_page);
         String comment = ((TextView) findViewById(R.id.commentConfirmacao)).getText().toString();
-        //tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+        tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
     }
+
+    //----------------------------------------------------------------------------------
 
     public void goStartMenuFromRegister(View view) {
         setContentView(R.layout.start_assistent_page);
     }
-
     public void goStartMenuFromLogin(View view) {
         Context context = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
@@ -449,7 +450,12 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
     }
+
+    //----------------------------------------------------------------------------------
+
     public void goMainMenu(View view) { setContentView(R.layout.activity_main_page); }
+
+    //----------------------------------------------------------------------------------
 
     public void goRestaurantList(View view) {
         setContentView(R.layout.restaurant_list);
@@ -460,7 +466,12 @@ public class MainActivity extends AppCompatActivity {
         inflating_view = getLayoutInflater().inflate(R.layout.restaurant_item, parent, false);
         parent.addView(inflating_view, index);
     }
+
+    //----------------------------------------------------------------------------------
+
     public void goRestauratDetail(View view) { setContentView(R.layout.scroll_view_restaurant_item_detail); }
+
+    //----------------------------------------------------------------------------------
 
     public void goLudicasList(View view) {
         setContentView(R.layout.ludicas_list);
@@ -471,7 +482,12 @@ public class MainActivity extends AppCompatActivity {
         inflating_view = getLayoutInflater().inflate(R.layout.ludicas_item, parent, false);
         parent.addView(inflating_view, index);
     }
+
+    //----------------------------------------------------------------------------------
+
     public void goLudicaDetail(View view) { setContentView(R.layout.scroll_view_ludicas_item_detail); }
+
+    //----------------------------------------------------------------------------------
 
     public void goTouristicList(View view) {
         setContentView(R.layout.touristic_list);
@@ -482,7 +498,12 @@ public class MainActivity extends AppCompatActivity {
         inflating_view = getLayoutInflater().inflate(R.layout.touristic_item, parent, false);
         parent.addView(inflating_view, index);
     }
+
+    //----------------------------------------------------------------------------------
+
     public void goTouristicDetail(View view) { setContentView(R.layout.scroll_view_touristic_item_detail); }
+
+    //----------------------------------------------------------------------------------
 
     public void onRadioButtonClicked(View view) {
 
