@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 public class Assitant implements Serializable {
     private String nome;
-    private int tipoRelacao;
+    private String tipoRelacao;
 
-    public Assitant(String nome, int tipoRelacao) {
+    public Assitant(String nome, String tipoRelacao) {
         this.nome = nome;
         this.tipoRelacao = tipoRelacao;
     }
@@ -19,11 +19,11 @@ public class Assitant implements Serializable {
         this.nome = nome;
     }
 
-    public int getTipoRelacao() {
+    public String getTipoRelacao() {
         return tipoRelacao;
     }
 
-    public void setTipoRelacao(int tipoRelacao) {
+    public void setTipoRelacao(String tipoRelacao) {
         this.tipoRelacao = tipoRelacao;
     }
 }

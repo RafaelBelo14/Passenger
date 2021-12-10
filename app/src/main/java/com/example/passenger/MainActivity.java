@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String relation = null;
     private TextToSpeech tts = null;
+    private User userAfterLogin = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_page);
         initializeFirebase();
         initializeVoice();
+
     }
 
     public void initializeFirebase() {
@@ -302,8 +305,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void goConfig9(View view) {
 
-        //TODO VERIFICAR CASOS EM QUE NÃO HÁ ALERGIAS
-
         Context context = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
         EditText alergiaAlimentar_layout = (EditText) findViewById(R.id.inputAlergiaAlimentar);
@@ -326,7 +327,16 @@ public class MainActivity extends AppCompatActivity {
                             setContentView(R.layout.config_alergia_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentAlergiaAlimentar)).getText().toString();
-                            tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            if (alergiaAlimentar.equals("Não") || alergiaAlimentar.equals("não") || alergiaAlimentar.equals("Nao") || alergiaAlimentar.equals("nao")){
+                                String comment2 = "Ainda bem que não tens qualquer alergia alimentar, é bom ver-te saudável!";
+                                TextView comment_text = (TextView) findViewById(R.id.commentAlergiaAlimentar);
+                                comment_text.setText(comment2);
+                                tts.speak(comment2, TextToSpeech.QUEUE_FLUSH, null);
+                            }
+                            else{
+                                tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
+                            }
+
                         }
                     } else {
                         Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
@@ -415,14 +425,6 @@ public class MainActivity extends AppCompatActivity {
 
     //----------------------------------------------------------------------------------
 
-    public void goConfig13(View view) {
-        setContentView(R.layout.config_end_page);
-        String comment = ((TextView) findViewById(R.id.commentConfirmacao)).getText().toString();
-        tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    //----------------------------------------------------------------------------------
-
     public void goStartMenuFromRegister(View view) {
         setContentView(R.layout.start_assistent_page);
     }
@@ -442,8 +444,10 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
 
-                        //TODO CARREGA INFO DO USER PARA A ASSISTENTE
                         setContentView(R.layout.start_assistent_page);
+                        importDataToUser(user.getUid());
+                        tts.speak("Como é mambo?", TextToSpeech.QUEUE_FLUSH, null);
+
                     } else {
                         Toast.makeText(context, "Credenciais incorretas! Já estás registado?", duration).show();
                     }
@@ -515,6 +519,34 @@ public class MainActivity extends AppCompatActivity {
         else {
             relation = "guia";
         }
+    }
+
+    public void importDataToUser(String userId) {
+        db.collection("users")
+                .whereEqualTo("id", userId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                userAfterLogin = new User(document.getData().get("name").toString(),
+                                        document.getData().get("email").toString(),
+                                        document.getData().get("assistant_name").toString(),
+                                        document.getData().get("relation").toString(),
+                                        document.getData().get("destino_sonho").toString(),
+                                        document.getData().get("comida_favorita").toString(),
+                                        document.getData().get("alergia_alimentar").toString(),
+                                        document.getData().get("hora_deitar").toString(),
+                                        document.getData().get("refeicoes").toString());
+
+                                Log.d("CONAAA", userAfterLogin.getAssistant_name());
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
 }
