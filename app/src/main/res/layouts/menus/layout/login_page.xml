@@ -85,7 +85,7 @@
             android:textSize="@dimen/text_edittext" />
 
         <Button
-            android:id="@+id/entrar"
+            android:id="@+id/entrarButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/inputLoginPassword"
@@ -93,7 +93,6 @@
             android:background="@drawable/button_background"
             android:fontFamily="@font/hind_regular"
             android:gravity="center"
-            android:onClick="goStartMenuFromLogin"
             android:text="@string/entrar"
             android:textColor="@color/white"
             android:textSize="@dimen/text_button" />
@@ -101,7 +100,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/entrar"
+            android:layout_below="@id/entrarButton"
             android:gravity="center">
 
             <TextView
@@ -113,10 +112,10 @@
                 android:textColor="@color/white" />
 
             <TextView
+                android:id="@+id/textViewRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:fontFamily="@font/hind_regular"
-                android:onClick="goRegister"
                 android:text="Registar"
                 android:textColor="@color/button_entrar" />
 

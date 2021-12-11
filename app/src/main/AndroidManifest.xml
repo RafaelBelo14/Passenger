@@ -10,7 +10,73 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Passenger">
         <activity
-            android:name=".MainActivity"
+            android:name=".Menus.touristic.TouristicDetail"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.ludicas.LudicasDetail"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.restaurant.RestaurantDetail"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.touristic.TouristicList"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.ludicas.LudicasList"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.restaurant.RestaurantList"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.menus.MainMenuAssistant"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.menus.StandByAssistant"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigFinalComment"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigRefeicoes"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigHoraDeitar"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigAlergiaComment"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigAlergiaAlimentar"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigConhecerMelhor"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigAssistantName"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigComidaComment"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigComidaFavorita"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigDestinoComment"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigDestinoSonho"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.configuration.ConfigRelation"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.menus.Register"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.menus.Login"
+            android:exported="false" />
+        <activity
+            android:name=".Menus.menus.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

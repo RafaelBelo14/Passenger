@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout"
-    tools:context=".MainActivity">
+    tools:context=".Menus.menus.MainActivity">
 
     <ImageView
         android:id="@+id/back"
@@ -75,7 +75,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/entrar"
+        android:id="@+id/buttonSeguinteName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear1"
@@ -85,7 +85,6 @@
         android:background="@drawable/button_background"
         android:fontFamily="@font/hind_regular"
         android:gravity="center"
-        android:onClick="goConfig2"
         android:text="@string/seguinte"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button" />
@@ -94,7 +93,7 @@
         android:id="@+id/progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/entrar"
+        android:layout_below="@id/buttonSeguinteName"
         android:src="@drawable/progress_bar" />
 
 </RelativeLayout>

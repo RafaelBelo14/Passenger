@@ -1,4 +1,4 @@
-package com.example.passenger;
+package com.example.passenger.Objects;
 
 public class User {
     private String name;

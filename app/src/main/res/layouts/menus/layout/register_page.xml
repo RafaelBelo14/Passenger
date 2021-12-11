@@ -139,7 +139,7 @@
             android:textSize="@dimen/text_edittext" />
 
         <Button
-            android:id="@+id/entrar"
+            android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/inputPasswordConfirm"
@@ -155,7 +155,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/entrar"
+            android:layout_below="@id/buttonRegister"
             android:gravity="center">
 
             <TextView
@@ -167,6 +167,7 @@
                 android:layout_marginEnd="5dp"/>
 
             <TextView
+                android:id="@+id/changeToLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:text="Entrar"

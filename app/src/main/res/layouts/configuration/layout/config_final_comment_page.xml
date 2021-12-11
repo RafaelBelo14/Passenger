@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout"
-    tools:context=".MainActivity">
+    tools:context=".Menus.menus.MainActivity">
 
     <ImageView
         android:id="@+id/back"
@@ -47,7 +47,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/entrar"
+        android:id="@+id/buttonSeguinteFinalComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/linear1"
@@ -58,19 +58,17 @@
         android:background="@drawable/button_background"
         android:fontFamily="@font/hind_regular"
         android:gravity="center"
-        android:onClick="goStartMenuFromRegister"
         android:text="@string/seguinte"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button" />
 
     <TextView
-        android:id="@+id/reset"
-        android:layout_below="@id/entrar"
+        android:id="@+id/buttonReset"
+        android:layout_below="@id/buttonSeguinteFinalComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="Recomeçar"
-        android:onClick="goConfig1"
         android:fontFamily="@font/sora_semibold"
         android:textColor="@color/button_entrar"
         android:textSize="@dimen/text_edittext"/>

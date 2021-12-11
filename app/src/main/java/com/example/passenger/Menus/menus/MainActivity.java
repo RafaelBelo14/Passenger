@@ -1,33 +1,20 @@
-package com.example.passenger;
+package com.example.passenger.Menus.menus;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.TextView;
-import android.widget.TimePicker;
-import android.widget.Toast;
+import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.passenger.Objects.Assitant;
+import com.example.passenger.Objects.User;
+import com.example.passenger.R;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 
-import java.util.HashMap;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -37,19 +24,45 @@ public class MainActivity extends AppCompatActivity {
     private String relation = null;
     private TextToSpeech tts = null;
     private User userAfterLogin = null;
+    private Assitant assistant = null;
+    private Button buttonLogin;
+    private Button buttonRegister;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_page);
-        initializeFirebase();
+        setContentView(R.layout.scroll_main_page);
         initializeVoice();
+
+        buttonLogin = (Button) findViewById(R.id.entrar);
+        buttonRegister = (Button) findViewById(R.id.registar);
+
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goLogin();
+            }
+        });
+
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goRegister();
+            }
+        });
 
     }
 
-    public void initializeFirebase() {
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+    public void goLogin() {
+        Intent intent = new Intent(this, Login.class);
+        startActivity(intent);
+    }
+
+    public void goRegister() {
+        Intent intent = new Intent(this, Register.class);
+        startActivity(intent);
     }
 
     public void initializeVoice() {
@@ -64,19 +77,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
+    /*
+
     //----------------------------------------------------------------------------------
 
     public void goLogin(View view) {
-        setContentView(R.layout.login_page);
+        setContentView(R.layout.scroll_login_page);
     }
     public void goRegister(View view) {
-        setContentView(R.layout.register_page);
+        setContentView(R.layout.scroll_register_page);
     }
 
     //----------------------------------------------------------------------------------
 
     public void backConfig1(View view) {
-        setContentView(R.layout.config_name_page);
+        setContentView(R.layout.scroll_config_name_page);
     }
     @SuppressLint("SetTextI18n")
     public void goConfig1(View view) {
@@ -104,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
 
                     db.collection("users")
                             .add(usermap);
-                    setContentView(R.layout.config_name_page);
+                    setContentView(R.layout.scroll_config_name_page);
 
                     String question = ((TextView) findViewById(R.id.questionNomeAssistente)).getText().toString();
                     TextView name_layout1 = (TextView) findViewById(R.id.heyHeading);
@@ -120,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------
 
     public void backConfig2(View view) {
-        setContentView(R.layout.config_relation_page);
+        setContentView(R.layout.scroll_config_relation_page);
     }
     public void goConfig2(View view) {
 
@@ -145,7 +162,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_relation_page);
+                            setContentView(R.layout.scroll_config_relation_page);
 
                             String question = ((TextView) findViewById(R.id.questionRelacao)).getText().toString();
                             tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
@@ -163,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
     @SuppressLint("NonConstantResourceId")
     public void goConfig3(View view) {
 
+        FirebaseUser user = mAuth.getCurrentUser();
         Context context = getApplicationContext();
         int duration = Toast.LENGTH_SHORT;
         HashMap<String, String> mapassistant = new HashMap<>();
@@ -172,7 +190,6 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
             mapassistant.put("relation", relation);
-            FirebaseUser user = mAuth.getCurrentUser();
             CollectionReference users = db.collection("users");
             db.collection("users").whereEqualTo("id", user.getUid())
                 .get()
@@ -180,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_conhecer_melhor_page);
+                            setContentView(R.layout.scroll_config_conhecer_melhor_page);
 
                             String comment = ((TextView) findViewById(R.id.commentConhecerMelhor)).getText().toString();
                             tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
@@ -196,11 +213,11 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------
 
     public void backConfig4(View view) {
-        setContentView(R.layout.config_destino_sonho_page);
+        setContentView(R.layout.scroll_config_destino_sonho_page);
     }
     public void goConfig4(View view) {
 
-        setContentView(R.layout.config_destino_sonho_page);
+        setContentView(R.layout.scroll_config_destino_sonho_page);
         String question = ((TextView) findViewById(R.id.questionDestinoSonho)).getText().toString();
         tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
 
@@ -230,7 +247,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_destino_coment_page);
+                            setContentView(R.layout.scroll_config_destino_coment_page);
 
                             TextView comment = (TextView) findViewById(R.id.comentDestinoSonho);
                             comment.setText(destinoSonho + " " + comment.getText().toString());
@@ -247,10 +264,10 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------
 
     public void backConfig6(View view) {
-        setContentView(R.layout.config_comida_favorita_page);
+        setContentView(R.layout.scroll_config_comida_favorita_page);
     }
     public void goConfig6(View view) {
-        setContentView(R.layout.config_comida_favorita_page);
+        setContentView(R.layout.scroll_config_comida_favorita_page);
         String question = ((TextView) findViewById(R.id.questionComidaFavorita)).getText().toString();
         tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
     }
@@ -277,7 +294,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_comida_coment_page);
+                            setContentView(R.layout.scroll_config_comida_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentComidaFavorita)).getText().toString();
                             tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
@@ -292,11 +309,11 @@ public class MainActivity extends AppCompatActivity {
     //----------------------------------------------------------------------------------
 
     public void backConfig8(View view) {
-        setContentView(R.layout.config_alergia_alimentar_page);
+        setContentView(R.layout.scroll_config_alergia_alimentar_page);
     }
 
     public void goConfig8(View view) {
-        setContentView(R.layout.config_alergia_alimentar_page);
+        setContentView(R.layout.scroll_config_alergia_alimentar_page);
         String question = ((TextView) findViewById(R.id.questionAlergiaALimentar)).getText().toString();
         tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
     }
@@ -324,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_alergia_coment_page);
+                            setContentView(R.layout.scroll_config_alergia_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentAlergiaAlimentar)).getText().toString();
                             if (alergiaAlimentar.equals("Não") || alergiaAlimentar.equals("não") || alergiaAlimentar.equals("Nao") || alergiaAlimentar.equals("nao")){
@@ -378,7 +395,7 @@ public class MainActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                        setContentView(R.layout.config_refeicoes_page);
+                        setContentView(R.layout.scroll_config_refeicoes_page);
 
                         String question = ((TextView) findViewById(R.id.questionRefeicoes)).getText().toString();
                         tts.speak(question, TextToSpeech.QUEUE_FLUSH, null);
@@ -411,7 +428,7 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                            setContentView(R.layout.config_final_comment_page);
+                            setContentView(R.layout.scroll_config_final_coment_page);
 
                             String comment = ((TextView) findViewById(R.id.commentFinal)).getText().toString();
                             tts.speak(comment, TextToSpeech.QUEUE_FLUSH, null);
@@ -443,21 +460,33 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (task.isSuccessful()) {
                         FirebaseUser user = mAuth.getCurrentUser();
-
-                        setContentView(R.layout.start_assistent_page);
                         importDataToUser(user.getUid());
-                        tts.speak("Como é mambo?", TextToSpeech.QUEUE_FLUSH, null);
+                        setContentView(R.layout.start_assistent_page);
 
                     } else {
                         Toast.makeText(context, "Credenciais incorretas! Já estás registado?", duration).show();
                     }
                 }
             });
+
+        int relationUser = 1;
+        if (userAfterLogin == null) {
+            Toast.makeText(context, "User a null", duration).show();
+        }
+        else {
+            if (userAfterLogin.getRelation().equals("amiga")) {
+                relationUser = 0;
+            }
+
+            assistant = new Assitant(relationUser);
+
+            tts.speak(assistant.sayWelcome(), TextToSpeech.QUEUE_FLUSH, null);
+        }
     }
 
     //----------------------------------------------------------------------------------
 
-    public void goMainMenu(View view) { setContentView(R.layout.activity_main_page); }
+    public void goMainMenu(View view) { setContentView(R.layout.scroll_activity_main_page); }
 
     //----------------------------------------------------------------------------------
 
@@ -522,6 +551,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void importDataToUser(String userId) {
+        Log.i("CONAAA", "Entrou");
         db.collection("users")
                 .whereEqualTo("id", userId)
                 .get()
@@ -529,7 +559,9 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            Log.i("CONAAA", "Entrou successfull");
                             for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.i("CONAAA", "Entrou for");
                                 userAfterLogin = new User(document.getData().get("name").toString(),
                                         document.getData().get("email").toString(),
                                         document.getData().get("assistant_name").toString(),
@@ -540,13 +572,15 @@ public class MainActivity extends AppCompatActivity {
                                         document.getData().get("hora_deitar").toString(),
                                         document.getData().get("refeicoes").toString());
 
-                                Log.d("CONAAA", userAfterLogin.getAssistant_name());
+                                Log.i("CONAAA", userAfterLogin.getAssistant_name());
                             }
                         } else {
-                            Log.d("TAG", "Error getting documents: ", task.getException());
+                            Log.i("CONAAA", "Error getting documents");
                         }
                     }
                 });
     }
+
+*/
 
 }

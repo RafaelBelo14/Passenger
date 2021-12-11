@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/layout"
-    tools:context=".MainActivity">
+    tools:context=".Menus.menus.MainActivity">
 
     <LinearLayout
         android:id="@+id/linear0"
@@ -258,7 +258,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/ir"
+        android:id="@+id/queroIrButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/line6"
@@ -268,7 +268,6 @@
         android:background="@drawable/button_background"
         android:fontFamily="@font/hind_regular"
         android:gravity="center"
-        android:onClick=""
         android:text="Quero ir!"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button" />
@@ -278,10 +277,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="40dp"
-        android:layout_below="@id/ir"
+        android:layout_below="@id/queroIrButton"
         android:text="Ver outras opções"
         android:gravity="center"
-        android:onClick="goTouristicList"
         android:textColor="@color/button_entrar"
         android:textSize="@dimen/text_button"
         android:fontFamily="@font/hind_regular"

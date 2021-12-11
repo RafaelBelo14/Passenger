@@ -1,4 +1,4 @@
-package com.example.passenger;
+package com.example.passenger.Objects;
 
 import java.io.Serializable;
 
