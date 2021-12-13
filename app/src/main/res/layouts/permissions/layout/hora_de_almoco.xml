@@ -51,28 +51,34 @@
         android:layout_marginRight="120dp"
         android:background="@drawable/button_register_background"
         android:text="Rejeitar"
-        android:onClick=""
         android:textColor="@color/white"
-        android:textSize="@dimen/text_button" />
+        android:textSize="@dimen/text_button"
+        android:onClick="onReject" />
 
-    <ImageView
-        android:id="@+id/arrow"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:orientation="vertical"
         android:layout_below="@id/rejeitar"
-        android:src="@drawable/arrow_swipe" />
+        android:onClick="seeRestaurants" >
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_below="@id/arrow"
-        android:gravity="center"
-        android:text="Swipe para ver\nrestaurantes próximos"
-        android:textColor="@color/white"
-        android:fontFamily="@font/roboto_regular" />
+        <ImageView
+            android:id="@+id/arrow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:src="@drawable/arrow_swipe" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/arrow"
+            android:gravity="center"
+            android:text="Swipe para ver\nrestaurantes próximos"
+            android:textColor="@color/white"
+            android:fontFamily="@font/roboto_regular" />
 
+    </LinearLayout>
 
 </RelativeLayout>

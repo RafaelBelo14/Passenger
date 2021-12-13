@@ -15,11 +15,14 @@
         <entry key="app/src/main/res/drawable/check_box_style.xml" value="0.40520833333333334" />
         <entry key="app/src/main/res/drawable/gradient_login_register.xml" value="0.40520833333333334" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.4197916666666667" />
+        <entry key="app/src/main/res/drawable/nav_bar_design.xml" value="0.3260416666666667" />
+        <entry key="app/src/main/res/drawable/navigation_bar_background.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/drawable/round_button_start.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/drawable/round_shadow_start.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/drawable/round_shadow_start2.xml" value="0.40520833333333334" />
         <entry key="app/src/main/res/layout/activity_config.xml" value="0.13489583333333333" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/back_exit_menu_toolbar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/config_alergia_alimentar_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/config_alergia_coment_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/config_comida_coment_page.xml" value="0.3890625" />
@@ -33,9 +36,15 @@
         <entry key="app/src/main/res/layout/config_name_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/config_refeicoes_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/config_relation_page.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layout/drawer_start_assistant_page.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/layout/exit_menu_toolbar.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/login_form.xml" value="0.67" />
         <entry key="app/src/main/res/layout/login_page.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/main_nav_bar.xml" value="0.335" />
         <entry key="app/src/main/res/layout/main_page.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layout/main_toolbar.xml" value="0.19166666666666668" />
+        <entry key="app/src/main/res/layout/menu_toolbar.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/nav_header.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layout/register_form.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/register_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layout/repository_item.xml" value="0.3890625" />
@@ -65,12 +74,19 @@
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_name_page.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_refeicoes_page.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_relation_page.xml" value="0.12864583333333332" />
+        <entry key="app/src/main/res/layouts/ludicas/drawable/ic_baseline_close_24.xml" value="0.3260416666666667" />
+        <entry key="app/src/main/res/layouts/ludicas/drawable/ic_baseline_menu_24.xml" value="0.2078125" />
+        <entry key="app/src/main/res/layouts/ludicas/layout/drawer_ludicas_item_detail.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layouts/ludicas/layout/drawer_ludicas_list.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/layouts/ludicas/layout/item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_item.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_item_detail.xml" value="0.3890625" />
-        <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_list.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/ludicas/layout/ludicas_list.xml" value="0.1" />
         <entry key="app/src/main/res/layouts/ludicas/layout/scroll_view_item_detail.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/ludicas/layout/scroll_view_ludicas_item_detail.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/layouts/menus/layout/activity_main_page.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layouts/menus/layout/drawer_activity_main_page.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layouts/menus/layout/drawer_start_assistant_page.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layouts/menus/layout/login_page.xml" value="0.375" />
         <entry key="app/src/main/res/layouts/menus/layout/main_page.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/menus/layout/register_page.xml" value="0.3890625" />
@@ -83,19 +99,26 @@
         <entry key="app/src/main/res/layouts/permissions/layout/hora_de_almoco.xml" value="0.23586744639376217" />
         <entry key="app/src/main/res/layouts/permissions/layout/hora_de_dormir.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layouts/permissions/layout/location_page.xml" value="0.4036458333333333" />
+        <entry key="app/src/main/res/layouts/permissions/layout/scroll_hora_almoco.xml" value="0.1546875" />
+        <entry key="app/src/main/res/layouts/restaurantes/layout/drawer_restaurant_item_detail.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layouts/restaurantes/layout/drawer_restaurant_list.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/restaurant_item.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/restaurant_item_detail.xml" value="0.33" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/restaurant_list.xml" value="0.33" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/scroll_view_item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/restaurantes/layout/scroll_view_restaurant_item_detail.xml" value="0.31305449936628643" />
+        <entry key="app/src/main/res/layouts/turisticas/layout/drawer_touristic_item_detail.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layouts/turisticas/layout/drawer_touristic_list.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layouts/turisticas/layout/item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/turisticas/layout/scroll_view_item_detail.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/turisticas/layout/scroll_view_touristic_item_detail.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layouts/turisticas/layout/touristic_item.xml" value="0.3890625" />
         <entry key="app/src/main/res/layouts/turisticas/layout/touristic_item_detail.xml" value="0.3890625" />
-        <entry key="app/src/main/res/layouts/turisticas/layout/touristic_list.xml" value="0.3890625" />
+        <entry key="app/src/main/res/layouts/turisticas/layout/touristic_list.xml" value="0.3757396449704142" />
         <entry key="app/src/main/res/layouts/turisticas/layout/turistic_list.xml" value="0.3890625" />
+        <entry key="app/src/main/res/menu/nav_frawer_menu.xml" value="0.1" />
+        <entry key="app/src/main/res/menu/nav_menu.xml" value="0.19166666666666668" />
       </map>
     </option>
   </component>

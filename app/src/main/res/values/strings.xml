@@ -5,4 +5,6 @@
     <string name="passenger">PASSENGER</string>
     <string name="registar">Registar</string>
     <string name="seguinte">Seguinte</string>
+    <string name="openSideBar">Open</string>
+    <string name="closeSideBar">Open</string>
 </resources>

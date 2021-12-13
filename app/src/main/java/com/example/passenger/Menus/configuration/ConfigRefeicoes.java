@@ -88,6 +88,12 @@ public class ConfigRefeicoes extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        tts.stop();
+    }
+
     public void initializeVoice() {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {

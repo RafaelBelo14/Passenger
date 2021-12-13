@@ -9,4 +9,7 @@
     <color name="confirm">#16C612</color>
     <color name="shadow_button">#0052BD</color>
     <color name="dormir">#000D1D</color>
+    <color name="sideBar_1">#4A5768</color>
+    <color name="sideBar_2">#0D1E35</color>
+
 </resources>

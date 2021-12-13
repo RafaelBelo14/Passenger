@@ -30,26 +30,24 @@
             android:id="@+id/entrar"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:background="@drawable/button_background"
-            android:gravity="center"
-            android:onClick="goLogin"
             android:layout_margin="5dp"
-            android:text="@string/entrar"
+            android:background="@drawable/button_background"
             android:fontFamily="@font/hind_regular"
+            android:gravity="center"
+            android:text="@string/entrar"
             android:textColor="@color/white" />
 
         <Button
             android:id="@+id/registar"
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:layout_margin="5dp"
             android:background="@drawable/button_register_background"
+            android:fontFamily="@font/hind_regular"
+            android:gravity="center"
             android:text="@string/registar"
             android:textColor="@color/white"
-            android:gravity="center"
-            android:onClick="goRegister"
-            android:fontFamily="@font/hind_regular"
-            android:layout_margin="5dp"
-            android:textSize="@dimen/text_button"/>
+            android:textSize="@dimen/text_button" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -6,37 +6,11 @@
     android:background="@color/layout"
     tools:context=".Menus.menus.MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linear0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:layout_marginBottom="40dp"
-        android:gravity="right"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/exitSession"
-            android:layout_below="@id/heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/exit" />
-
-        <ImageView
-            android:id="@+id/menu"
-            android:layout_below="@id/heading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/menu" />
-
-    </LinearLayout>
-
     <ImageView
         android:id="@+id/voice"
-        android:layout_below="@id/linear0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:src="@drawable/voice_line" />
 
     <LinearLayout
