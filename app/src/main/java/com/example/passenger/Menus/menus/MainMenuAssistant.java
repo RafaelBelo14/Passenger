@@ -10,6 +10,8 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
@@ -32,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class MainMenuAssistant extends AppCompatActivity implements LocationListener {
+    private boolean mute;
     private Button restaurantButton;
     private Button ludicasButton;
     private Button touristicButton;
@@ -40,25 +43,30 @@ public class MainMenuAssistant extends AppCompatActivity implements LocationList
     private SwitchCompat switchCompat;
     private LocationManager locationManager;
     private int buttonChoice = 0;
+    private TextToSpeech tts = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_activity_main_page);
         mAuth = FirebaseAuth.getInstance();
+        initViews();
+        initIntentExtras();
 
         if (ContextCompat.checkSelfPermission(MainMenuAssistant.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainMenuAssistant.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},100);
         }
 
-        drawerLayout = findViewById(R.id.drawerLayout);
-
-        switchCompat = findViewById(R.id.switchCompat);
-        switchCompat.setSwitchPadding(40);
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(MainMenuAssistant.this, "Switch clicked!", Toast.LENGTH_SHORT).show();
+                if (mute) {
+                    mute = false;
+                    Toast.makeText(MainMenuAssistant.this, "Unmuted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    mute = true;
+                    Toast.makeText(MainMenuAssistant.this, "Muted!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -91,6 +99,39 @@ public class MainMenuAssistant extends AppCompatActivity implements LocationList
         });
     }
 
+    public void initViews() {
+        drawerLayout = findViewById(R.id.drawerLayout);
+        switchCompat = findViewById(R.id.switchCompat);
+        switchCompat.setSwitchPadding(40);
+    }
+
+    public void initIntentExtras() {
+        if (getIntent().getExtras() == null) {
+            Toast.makeText(MainMenuAssistant.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
+        } else if (getIntent().getExtras().getString("mute").equals("true")) {
+            mute = true;
+            switchCompat.setChecked(true);
+            Toast.makeText(MainMenuAssistant.this, "Muted!", Toast.LENGTH_SHORT).show();
+        } else if (getIntent().getExtras().getString("mute").equals("false")) {
+            mute = false;
+            switchCompat.setChecked(false);
+            initializeVoice();
+            Toast.makeText(MainMenuAssistant.this, "Unmuted!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void initializeVoice() {
+        tts = new TextToSpeech(this, initStatus -> {
+            if (initStatus == TextToSpeech.SUCCESS) {
+                tts.setLanguage(new Locale("pt", "POR"));
+                //TODO meter frases na main menu assistant
+                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
+            } else {
+                Log.d("TAG", "Can't initialize TextToSpeech");
+            }
+        });
+    }
+
     public void clickMenu(View view) {
         StandByAssistant.openDrawer(drawerLayout);
     }
@@ -107,6 +148,7 @@ public class MainMenuAssistant extends AppCompatActivity implements LocationList
 
     public void clickExit(View view) {
         Intent intent = new Intent(MainMenuAssistant.this, StandByAssistant.class);
+        intent.putExtra("mute", String.valueOf(mute));
         startActivity(intent);
     }
 
@@ -122,8 +164,7 @@ public class MainMenuAssistant extends AppCompatActivity implements LocationList
         try {
             locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,5000,5,MainMenuAssistant.this);
-
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
         }
 
@@ -137,18 +178,22 @@ public class MainMenuAssistant extends AppCompatActivity implements LocationList
             String address = addresses.get(0).getAddressLine(0);
 
             if (buttonChoice == 0) {
+                Log.i("CLICK", "Clicked!");
                 Intent intent = new Intent(MainMenuAssistant.this, RestaurantList.class);
                 intent.putExtra("latitude_longitude", location.getLatitude()+","+location.getLongitude());
+                intent.putExtra("mute", String.valueOf(mute));
                 startActivity(intent);
             }
             else if (buttonChoice == 1) {
                 Intent intent = new Intent(MainMenuAssistant.this, LudicasList.class);
                 intent.putExtra("latitude_longitude", location.getLatitude()+","+location.getLongitude());
+                intent.putExtra("mute", String.valueOf(mute));
                 startActivity(intent);
             }
             else {
                 Intent intent = new Intent(MainMenuAssistant.this, TouristicList.class);
                 intent.putExtra("latitude_longitude", location.getLatitude()+","+location.getLongitude());
+                intent.putExtra("mute", String.valueOf(mute));
                 startActivity(intent);
             }
 

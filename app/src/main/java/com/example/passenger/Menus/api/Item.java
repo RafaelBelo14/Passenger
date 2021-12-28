@@ -18,6 +18,8 @@ public class Item {
     private float rating;
     @SerializedName("vicinity")
     private String morada;
+    @SerializedName("geometry")
+    private JsonObject geometry;
 
     public ArrayList<Photo> getIcon() {
         return icon;
@@ -65,5 +67,13 @@ public class Item {
 
     public void setMorada(String morada) {
         this.morada = morada;
+    }
+
+    public JsonObject getGeometry() {
+        return geometry;
+    }
+
+    public void setGeometry(JsonObject geometry) {
+        this.geometry = geometry;
     }
 }

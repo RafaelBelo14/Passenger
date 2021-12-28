@@ -28,4 +28,14 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:id="@+id/errorMessage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_body"
+        android:text="No tourist attractions nearby..."
+        android:visibility="invisible" />
+
 </androidx.drawerlayout.widget.DrawerLayout>

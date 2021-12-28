@@ -33,7 +33,7 @@ public class ConfigAlergiaComment extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConfigAlergiaComment.this, ConfigHoraDeitar.class);
+                Intent intent = new Intent(ConfigAlergiaComment.this, ConfigHoraAlmoco.class);
                 startActivity(intent);
             }
         });

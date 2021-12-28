@@ -1,0 +1,8 @@
+2 - ** - Frases amigáveis e de guia
+3 - ** Layout de perfil editável
+4 - * Quando escolhe um restaurante para mostrar mapa, assistente avisa sobre alergia
+5 - ** Quando desabilitamos a assistente, ela tem um prob de voltar a ligar
+6 - **** - Notificações
+
+3 - (Opcional) Vibração quando a asssistente tá feliz
+4 - (Opcional) Animar a imagem da a assistente a falar

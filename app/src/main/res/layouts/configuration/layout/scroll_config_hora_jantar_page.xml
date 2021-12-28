@@ -11,6 +11,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <include layout="@layout/config_refeicoes_page" />
+        <include layout="@layout/config_hora_jantar_page" />
     </LinearLayout>
 </ScrollView>

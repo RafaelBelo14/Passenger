@@ -2,6 +2,7 @@ package com.example.passenger.Menus.api;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,34 +19,48 @@ import com.example.passenger.R;
 
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class GoogleRestaurantAdapter extends RecyclerView.Adapter<GoogleRestaurantAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Item> list;
-    private final static String URL_GOOGLE = "https://maps.googleapis.com/maps/api/place/";
     private final static String KEY = "AIzaSyBN0JoU7O597v0dOTCJ-oINVvoxe9BzAAM";
+    private String LATITUDE_LONGITUDE;
+    private boolean mute;
 
-    public GoogleRestaurantAdapter(Context context, List<Item> list) {
+    public GoogleRestaurantAdapter(Context context, List<Item> list, String latitude_longitude, boolean mute) {
         this.context = context;
         this.list = list;
+        this.LATITUDE_LONGITUDE = latitude_longitude;
+        this.mute = mute;
+    }
+
+    public void setMute(boolean mute) {
+        this.mute = mute;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView restaurantImage;
         TextView restaurantName;
         TextView restaurantOpen;
+        TextView restaurantRating;
+        TextView restaurantVicinity;
+        TextView restaurantPriceLevel;
+        TextView restaurantPhotoReference;
+        TextView restaurantLatitude;
+        TextView restaurantLongitude;
         RelativeLayout parentLayout;
 
         public ViewHolder(View view) {
             super(view);
+            restaurantPhotoReference = view.findViewById(R.id.restaurantPhotoReference);
             restaurantImage = view.findViewById(R.id.restaurantImage);
             restaurantName = view.findViewById(R.id.restaurantName);
             restaurantOpen = view.findViewById(R.id.restaurantOpen);
+            restaurantRating = view.findViewById(R.id.restaurantRating);
+            restaurantVicinity = view.findViewById(R.id.restaurantVicinity);
+            restaurantPriceLevel = view.findViewById(R.id.restaurantPriceLevel);
+            restaurantLatitude = view.findViewById(R.id.restaurantLatitude);
+            restaurantLongitude = view.findViewById(R.id.restaurantLongitude);
             parentLayout = view.findViewById(R.id.restaurantItem);
         }
     }
@@ -71,12 +86,43 @@ public class GoogleRestaurantAdapter extends RecyclerView.Adapter<GoogleRestaura
                 Glide.with(context)
                         .load(url)
                         .into(holder.restaurantImage);
+                holder.restaurantPhotoReference.setText(list.get(position).getIcon().get(0).getPhoto_reference());
                 holder.restaurantName.setText(list.get(position).getName());
-                holder.restaurantOpen.setText(String.valueOf(list.get(position).getRating()));
+                if (list.get(position).getOpening_hours() == null) {
+                    holder.restaurantOpen.setText("Sem informação");
+                }
+                else {
+                    if (list.get(position).getOpening_hours().get("open_now").toString().equals("true")) {
+                        holder.restaurantOpen.setText("Aberto");
+                    }
+                    else {
+                        holder.restaurantOpen.setText("Fechado");
+                    }
+                }
+                holder.restaurantRating.setText(String.valueOf(list.get(position).getRating()));
+                holder.restaurantPriceLevel.setText(String.valueOf(list.get(position).getPrice_level()));
+                holder.restaurantVicinity.setText(list.get(position).getMorada());
+                holder.restaurantLatitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lat").toString());
+                holder.restaurantLongitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lng").toString());
             }
             else {
                 holder.restaurantName.setText(list.get(position).getName());
-                holder.restaurantOpen.setText(String.valueOf(list.get(position).getRating()));
+                if (list.get(position).getOpening_hours() == null) {
+                    holder.restaurantOpen.setText("Sem informação");
+                }
+                else {
+                    if (list.get(position).getOpening_hours().get("open_now").toString().equals("true")) {
+                        holder.restaurantOpen.setText("Aberto");
+                    }
+                    else {
+                        holder.restaurantOpen.setText("Fechado");
+                    }
+                }
+                holder.restaurantRating.setText(String.valueOf(list.get(position).getRating()));
+                holder.restaurantPriceLevel.setText(String.valueOf(list.get(position).getPrice_level()));
+                holder.restaurantVicinity.setText(list.get(position).getMorada());
+                holder.restaurantLatitude.setText(list.get(position).getGeometry().getAsJsonObject("geometry").getAsJsonObject("lat").toString());
+                holder.restaurantLongitude.setText(list.get(position).getGeometry().getAsJsonObject("geometry").getAsJsonObject("lng").toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,6 +132,25 @@ public class GoogleRestaurantAdapter extends RecyclerView.Adapter<GoogleRestaura
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, RestaurantDetail.class);
+                Log.d("INFOOOO", "A enviar:\n" +
+                        String.valueOf(mute) + "\n" +
+                        holder.restaurantPhotoReference.getText() + "\n" +
+                        holder.restaurantName.getText() + "\n" +
+                        holder.restaurantOpen.getText() + "\n" +
+                        holder.restaurantRating.getText() + '\n' +
+                        holder.restaurantLatitude.getText() + '\n' +
+                        holder.restaurantLongitude.getText());
+
+                intent.putExtra("photo_reference", holder.restaurantPhotoReference.getText());
+                intent.putExtra("name", holder.restaurantName.getText());
+                intent.putExtra("open", holder.restaurantOpen.getText());
+                intent.putExtra("rating", holder.restaurantRating.getText());
+                intent.putExtra("price_level", holder.restaurantPriceLevel.getText());
+                intent.putExtra("vicinity", holder.restaurantVicinity.getText());
+                intent.putExtra("latitude_longitude", LATITUDE_LONGITUDE);
+                intent.putExtra("mute", String.valueOf(mute));
+                intent.putExtra("latitude_place", holder.restaurantLatitude.getText());
+                intent.putExtra("longitude_place", holder.restaurantLongitude.getText());
                 context.startActivity(intent);
             }
         });
@@ -94,21 +159,5 @@ public class GoogleRestaurantAdapter extends RecyclerView.Adapter<GoogleRestaura
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    @NonNull
-    private Retrofit getRetrofit(OkHttpClient client) {
-        return new Retrofit.Builder()
-                .baseUrl(URL_GOOGLE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-    }
-
-    @NonNull
-    private OkHttpClient getOkHttpClient() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
     }
 }

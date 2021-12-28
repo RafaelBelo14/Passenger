@@ -42,7 +42,7 @@ public class ConfigFinalComment extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConfigFinalComment.this, ConfigRefeicoes.class);
+                Intent intent = new Intent(ConfigFinalComment.this, ConfigHoraAlmoco.class);
                 startActivity(intent);
             }
         });

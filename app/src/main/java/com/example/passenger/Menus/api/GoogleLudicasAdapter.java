@@ -2,6 +2,7 @@ package com.example.passenger.Menus.api;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,35 +19,49 @@ import com.example.passenger.R;
 
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdapter.ViewHolder> {
 
     private final Context context;
     private final List<Item> list;
-    private final static String URL_GOOGLE = "https://maps.googleapis.com/maps/api/place/";
     private final static String KEY = "AIzaSyBN0JoU7O597v0dOTCJ-oINVvoxe9BzAAM";
+    private String LATITUDE_LONGITUDE;
+    private boolean mute;
 
-    public GoogleLudicasAdapter(Context context, List<Item> list) {
+    public GoogleLudicasAdapter(Context context, List<Item> list, String latitude_longitude, boolean mute) {
         this.context = context;
         this.list = list;
+        this.LATITUDE_LONGITUDE = latitude_longitude;
+        this.mute = mute;
+    }
+
+    public void setMute(boolean mute) {
+        this.mute = mute;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView restaurantImage;
-        TextView restaurantName;
-        TextView restaurantOpen;
+        ImageView ludicasImage;
+        TextView ludicasName;
+        TextView ludicasOpen;
+        TextView ludicasRating;
+        TextView ludicasVicinity;
+        TextView ludicasPriceLevel;
+        TextView ludicasPhotoReference;
+        TextView ludicasLatitude;
+        TextView ludicasLongitude;
         RelativeLayout parentLayout;
 
         public ViewHolder(View view) {
             super(view);
-            restaurantImage = view.findViewById(R.id.restaurantImage);
-            restaurantName = view.findViewById(R.id.restaurantName);
-            restaurantOpen = view.findViewById(R.id.restaurantOpen);
-            parentLayout = view.findViewById(R.id.restaurantItem);
+            ludicasPhotoReference = view.findViewById(R.id.ludicasPhotoReference);
+            ludicasImage = view.findViewById(R.id.ludicasImage);
+            ludicasName = view.findViewById(R.id.ludicasName);
+            ludicasOpen = view.findViewById(R.id.ludicasOpen);
+            ludicasRating = view.findViewById(R.id.ludicasRating);
+            ludicasVicinity = view.findViewById(R.id.ludicasVinicity);
+            ludicasPriceLevel = view.findViewById(R.id.ludicasPriceLevel);
+            ludicasLatitude = view.findViewById(R.id.ludicasLatitude);
+            ludicasLongitude = view.findViewById(R.id.ludicasLongitude);
+            parentLayout = view.findViewById(R.id.ludicasItem);
         }
     }
 
@@ -54,7 +69,7 @@ public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.restaurant_item, parent, false);
+                .inflate(R.layout.ludicas_item, parent, false);
 
         return new ViewHolder(view);
     }
@@ -70,13 +85,45 @@ public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdap
 
                 Glide.with(context)
                         .load(url)
-                        .into(holder.restaurantImage);
-                holder.restaurantName.setText(list.get(position).getName());
-                holder.restaurantOpen.setText(String.valueOf(list.get(position).getRating()));
+                        .into(holder.ludicasImage);
+                holder.ludicasPhotoReference.setText(list.get(position).getIcon().get(0).getPhoto_reference());
+                holder.ludicasName.setText(list.get(position).getName());
+                if (list.get(position).getOpening_hours() == null) {
+                    holder.ludicasOpen.setText("Sem informação");
+                }
+                else {
+                    if (list.get(position).getOpening_hours().get("open_now").toString().equals("true")) {
+                        holder.ludicasOpen.setText("Aberto");
+                    }
+                    else {
+                        holder.ludicasOpen.setText("Fechado");
+                    }
+                }
+                holder.ludicasRating.setText(String.valueOf(list.get(position).getRating()));
+                holder.ludicasPriceLevel.setText(String.valueOf(list.get(position).getPrice_level()));
+                holder.ludicasVicinity.setText(list.get(position).getMorada());
+                holder.ludicasLatitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lat").toString());
+                holder.ludicasLongitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lng").toString());
             }
             else {
-                holder.restaurantName.setText(list.get(position).getName());
-                holder.restaurantOpen.setText(String.valueOf(list.get(position).getRating()));
+                holder.ludicasName.setText(list.get(position).getName());
+                if (list.get(position).getOpening_hours() == null) {
+                    holder.ludicasOpen.setText("Sem informação");
+                }
+                else {
+                    if (list.get(position).getOpening_hours().get("open_now").toString().equals("true")) {
+                        holder.ludicasOpen.setText("Aberto");
+                    }
+                    else {
+                        holder.ludicasOpen.setText("Fechado");
+                    }
+                }
+
+                holder.ludicasRating.setText(String.valueOf(list.get(position).getRating()));
+                holder.ludicasPriceLevel.setText(String.valueOf(list.get(position).getPrice_level()));
+                holder.ludicasVicinity.setText(list.get(position).getMorada());
+                holder.ludicasLatitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lat").toString());
+                holder.ludicasLongitude.setText(list.get(position).getGeometry().getAsJsonObject("location").get("lng").toString());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,6 +133,23 @@ public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdap
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, LudicasDetail.class);
+                Log.d("INFOOOO", "A enviar:\n" +
+                        String.valueOf(mute) + "\n" +
+                        holder.ludicasPhotoReference.getText() + "\n" +
+                        holder.ludicasName.getText() + "\n" +
+                        holder.ludicasOpen.getText() + "\n" +
+                        holder.ludicasRating.getText());
+
+                intent.putExtra("photo_reference", holder.ludicasPhotoReference.getText());
+                intent.putExtra("name", holder.ludicasName.getText());
+                intent.putExtra("open", holder.ludicasOpen.getText());
+                intent.putExtra("rating", holder.ludicasRating.getText());
+                intent.putExtra("price_level", holder.ludicasPriceLevel.getText());
+                intent.putExtra("vicinity", holder.ludicasVicinity.getText());
+                intent.putExtra("latitude_longitude", LATITUDE_LONGITUDE);
+                intent.putExtra("mute", String.valueOf(mute));
+                intent.putExtra("latitude_place", holder.ludicasLatitude.getText());
+                intent.putExtra("longitude_place", holder.ludicasLongitude.getText());
                 context.startActivity(intent);
             }
         });
@@ -94,21 +158,5 @@ public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdap
     @Override
     public int getItemCount() {
         return list.size();
-    }
-
-    @NonNull
-    private Retrofit getRetrofit(OkHttpClient client) {
-        return new Retrofit.Builder()
-                .baseUrl(URL_GOOGLE)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-    }
-
-    @NonNull
-    private OkHttpClient getOkHttpClient() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder().addInterceptor(loggingInterceptor).build();
     }
 }

@@ -7,9 +7,9 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +25,7 @@ import com.google.firebase.firestore.SetOptions;
 import java.util.HashMap;
 import java.util.Locale;
 
-public class ConfigRefeicoes extends AppCompatActivity {
+public class ConfigHoraJantar extends AppCompatActivity {
     private Button buttonSeguinte;
     private ImageView backButton;
     private FirebaseAuth mAuth;
@@ -38,55 +38,49 @@ public class ConfigRefeicoes extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         initializeVoice();
-        setContentView(R.layout.scroll_config_refeicoes_page);
+        setContentView(R.layout.scroll_config_hora_jantar_page);
 
         buttonSeguinte = (Button) findViewById(R.id.buttonSeguinteRefeicoes);
         backButton = (ImageView) findViewById(R.id.back);
 
         buttonSeguinte.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 FirebaseUser user = mAuth.getCurrentUser();
                 Context context = getApplicationContext();
                 int duration = Toast.LENGTH_SHORT;
 
-                EditText refeicoes_layout = (EditText) findViewById(R.id.inputRefeicoes);
-                String refeicoes = refeicoes_layout.getText().toString();
+                TimePicker timePicker_layout = (TimePicker) findViewById(R.id.timePicker);
+                int timePicker_hour = timePicker_layout.getHour();
+                int timePicker_minute = timePicker_layout.getMinute();
 
-                HashMap<String,String> mapassistant = new HashMap<>();
-                if (refeicoes.equals("")) {
-                    Toast.makeText(context, "Escolhe uma comida!", duration).show();
-                }
-                else {
-                    mapassistant.put("hora_deitar", refeicoes);
-
-                    CollectionReference users = db.collection("users");
-                    db.collection("users").whereEqualTo("id", user.getUid())
-                            .get()
-                            .addOnCompleteListener(task -> {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
-                                        Intent intent = new Intent(ConfigRefeicoes.this, ConfigFinalComment.class);
-                                        startActivity(intent);
-                                    }
-                                } else {
-                                    Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                HashMap<String, String> mapassistant = new HashMap<>();
+                mapassistant.put("hora_jantar", timePicker_hour + ":" + timePicker_minute);
+                CollectionReference users = db.collection("users");
+                db.collection("users").whereEqualTo("id", user.getUid())
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    db.collection("users").document(document.getId()).set(mapassistant, SetOptions.merge());
+                                    Intent intent = new Intent(ConfigHoraJantar.this, ConfigHoraDeitar.class);
+                                    startActivity(intent);
                                 }
-                            });
-                }
+                            } else {
+                                Toast.makeText(context, "Erro a processar o pedido! Tenta novamente mais tarde.", duration).show();
+                            }
+                        });
             }
         });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ConfigRefeicoes.this, ConfigHoraDeitar.class);
+                Intent intent = new Intent(ConfigHoraJantar.this, ConfigHoraAlmoco.class);
                 startActivity(intent);
             }
         });
-    }
+}
 
     @Override
     protected void onStop() {

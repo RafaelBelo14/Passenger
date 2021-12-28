@@ -7,7 +7,7 @@
     tools:context=".Menus.menus.MainActivity">
 
     <ImageView
-        android:id="@+id/restaurant_image"
+        android:id="@+id/detalhesRestaurantImage"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
@@ -15,27 +15,40 @@
         android:contentDescription="@string/app_name"
         android:src="@drawable/restaurant_example2" />
 
+
+    <TextView
+        android:id="@+id/detalhesRestaurantName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detalhesRestaurantImage"
+        android:layout_gravity="top"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/hind_semibold"
+        android:text="Moustache Cafe"
+        android:textColor="@color/white"
+        android:textSize="30dp" />
+
     <LinearLayout
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@id/restaurant_image"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_below="@id/detalhesRestaurantName" >
 
         <TextView
-            android:id="@+id/icon_descr"
+            android:id="@+id/detalhesRestaurantOpen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:fontFamily="@font/hind_semibold"
-            android:layout_gravity="top"
-            android:text="Moustache Cafe"
+            android:text="Aberto agora"
+            android:gravity="left"
             android:textColor="@color/white"
-            android:textSize="@dimen/text_body" />
+            android:textSize="@dimen/text_button"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="RtlHardcoded" />
 
         <LinearLayout
             android:id="@+id/line2"
@@ -45,27 +58,50 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/stars"
+            <LinearLayout
+                android:id="@+id/line3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="stars"
                 android:gravity="right"
-                android:textColor="@color/button_entrar"
-                android:textSize="@dimen/text_button"
-                android:fontFamily="@font/hind_semibold"
-                tools:ignore="NestedWeights,RtlHardcoded" />
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:id="@+id/detalhesStar1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/detalhesStar2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/detalhesStar3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_star" />
+                <ImageView
+                    android:id="@+id/detalhesStar4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_star_border_24" />
+                <ImageView
+                    android:id="@+id/detalhesStar5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_star_border_24" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/cost"
+                android:id="@+id/detalhesRestaurantPriceLevel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="$$"
                 android:gravity="right"
                 android:textColor="@color/button_entrar"
-                android:textSize="@dimen/text_button"
+                android:textSize="@dimen/text_choice"
                 android:fontFamily="@font/hind_semibold"
                 tools:ignore="RtlHardcoded" />
 
@@ -74,69 +110,31 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/line3"
+        android:id="@+id/line4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
         android:layout_below="@id/line1"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/horario"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Horário"
-            android:gravity="left"
-            android:textColor="@color/button_entrar"
-            android:textSize="@dimen/text_choice"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="NestedWeights,RtlHardcoded" />
-
-        <TextView
-            android:id="@+id/horarioDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="9h-22h"
-            android:gravity="left"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_button"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="RtlHardcoded" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/line4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/line3"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/morada"
+            android:id="@+id/Morada"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Morada"
             android:gravity="left"
             android:textColor="@color/button_entrar"
-            android:textSize="@dimen/text_choice"
+            android:textSize="@dimen/text_body"
             android:fontFamily="@font/hind_semibold"
             tools:ignore="NestedWeights,RtlHardcoded" />
 
         <TextView
-            android:id="@+id/moradaDesc"
+            android:id="@+id/detalhesRestaurantVicinity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -149,109 +147,23 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/line5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
-        android:layout_below="@id/line4"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/contact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Contacto"
-            android:gravity="left"
-            android:textColor="@color/button_entrar"
-            android:textSize="@dimen/text_choice"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="NestedWeights,RtlHardcoded" />
-
-        <TextView
-            android:id="@+id/contactDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="406-449-4249"
-            android:gravity="left"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_button"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="RtlHardcoded" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/line6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginBottom="40dp"
-        android:layout_below="@id/line5"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/detalhes"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Detalhes"
-            android:gravity="left"
-            android:textColor="@color/button_entrar"
-            android:textSize="@dimen/text_choice"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="NestedWeights,RtlHardcoded" />
-
-        <TextView
-            android:id="@+id/detalhesDesc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Reserva no teu dia e te oferecemos espumante, bolo de aniversário e uma rodada de shots para todos!"
-            android:gravity="left"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_button"
-            android:fontFamily="@font/hind_semibold"
-            tools:ignore="RtlHardcoded" />
-
-    </LinearLayout>
 
     <Button
         android:id="@+id/queroIrButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/line6"
+        android:layout_below="@id/line4"
+        android:layout_marginTop="110dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/button_background"
         android:fontFamily="@font/hind_regular"
         android:gravity="center"
         android:text="Quero ir!"
         android:textColor="@color/white"
         android:textSize="@dimen/text_button" />
-
-    <TextView
-        android:id="@+id/outrasOpcoes"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/queroIrButton"
-        android:layout_marginBottom="40dp"
-        android:fontFamily="@font/hind_regular"
-        android:gravity="center"
-        android:text="Ver outras opções"
-        android:textColor="@color/button_entrar"
-        android:textSize="@dimen/text_button"
-        tools:ignore="RtlHardcoded" />
 
 
 </RelativeLayout>

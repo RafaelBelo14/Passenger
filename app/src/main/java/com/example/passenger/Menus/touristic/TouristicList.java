@@ -2,8 +2,11 @@ package com.example.passenger.Menus.touristic;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,6 +28,7 @@ import com.example.passenger.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -35,33 +39,76 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TouristicList extends AppCompatActivity {
+    private boolean mute;
     private DrawerLayout drawerLayout;
+    private TextView errorMessage;
     private SwitchCompat switchCompat;
     private RecyclerView dataListView;
     private final static String URL_GOOGLE = "https://maps.googleapis.com/maps/api/";
     private final static String KEY = "AIzaSyBN0JoU7O597v0dOTCJ-oINVvoxe9BzAAM";
     private final static String RADIUS = "1000";
     private final static String TYPE_RESTAURANT = "tourist_attraction";
+    private TextToSpeech tts = null;
+    private GoogleTouristicAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_touristic_list);
         initViews();
+        initIntentExtras();
         makeGithubSearchQuery();
-        switchCompat = findViewById(R.id.switchCompat);
-        switchCompat.setSwitchPadding(40);
+
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Toast.makeText(TouristicList.this, "Switch clicked!", Toast.LENGTH_SHORT).show();
+                if (mute) {
+                    mute = false;
+                    adapter.setMute(false);
+                    Toast.makeText(TouristicList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
+                } else {
+                    mute = true;
+                    adapter.setMute(true);
+                    Toast.makeText(TouristicList.this, "Muted!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
 
     private void initViews() {
+        errorMessage = findViewById(R.id.errorMessage);
         drawerLayout = findViewById(R.id.drawerLayout);
         dataListView = findViewById(R.id.touristicListViewer);
+        switchCompat = findViewById(R.id.switchCompat);
+        switchCompat.setSwitchPadding(40);
+    }
+
+    public void initIntentExtras() {
+        if (getIntent().getExtras() == null) {
+            initializeVoice();
+            Toast.makeText(TouristicList.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
+        } else if (getIntent().getExtras().getString("mute").equals("true")) {
+            mute = true;
+            switchCompat.setChecked(true);
+            Toast.makeText(TouristicList.this, "Muted!", Toast.LENGTH_SHORT).show();
+        } else if (getIntent().getExtras().getString("mute").equals("false")) {
+            mute = false;
+            initializeVoice();
+            switchCompat.setChecked(false);
+            Toast.makeText(TouristicList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void initializeVoice() {
+        tts = new TextToSpeech(this, initStatus -> {
+            if (initStatus == TextToSpeech.SUCCESS) {
+                tts.setLanguage(new Locale("pt", "POR"));
+                //TODO meter frases na main menu assistant
+                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
+            } else {
+                Log.d("TAG", "Can't initialize TextToSpeech");
+            }
+        });
     }
 
     public void clickMenu(View view) {
@@ -74,11 +121,13 @@ public class TouristicList extends AppCompatActivity {
 
     public void clickExit(View view) {
         Intent intent = new Intent(TouristicList.this, StandByAssistant.class);
+        intent.putExtra("mute", String.valueOf(mute));
         startActivity(intent);
     }
 
     public void clickBack(View view) {
         Intent intent = new Intent(TouristicList.this, MainMenuAssistant.class);
+        intent.putExtra("mute", String.valueOf(mute));
         startActivity(intent);
     }
 
@@ -86,6 +135,16 @@ public class TouristicList extends AppCompatActivity {
         Intent intent = new Intent(TouristicList.this, MainActivity.class);
         FirebaseAuth.getInstance().signOut();
         startActivity(intent);
+    }
+
+    private void showErrorMessage() {
+        errorMessage.setVisibility(View.VISIBLE);
+        dataListView.setVisibility(View.INVISIBLE);
+    }
+
+    private void showTouristic() {
+        dataListView.setVisibility(View.VISIBLE);
+        errorMessage.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -107,11 +166,13 @@ public class TouristicList extends AppCompatActivity {
                     int statusCode = response.code();
                     System.out.println(statusCode);
                     printResults(response.body().getItemList());
+                    showErrorMessage();
                 }
             }
 
             @Override
             public void onFailure(Call<GoogleResponse> call, Throwable t) {
+                showErrorMessage();
                 t.printStackTrace();
             }
         });
@@ -119,7 +180,7 @@ public class TouristicList extends AppCompatActivity {
 
     private void printResults(List<Item> items) {
         dataListView = findViewById(R.id.touristicListViewer);
-        GoogleTouristicAdapter adapter = new GoogleTouristicAdapter(this, items);
+        adapter = new GoogleTouristicAdapter(this, items, getIntent().getExtras().getString("latitude_longitude"), mute);
         dataListView.setAdapter(adapter);
         dataListView.setLayoutManager(new LinearLayoutManager(this));
     }
