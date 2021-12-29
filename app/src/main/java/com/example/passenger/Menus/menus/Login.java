@@ -34,6 +34,7 @@ public class Login extends AppCompatActivity {
             if (user != null) {
                 Toast.makeText(Login.this, "User logged in ", Toast.LENGTH_SHORT).show();
                 Intent I = new Intent(Login.this, StandByAssistant.class);
+                I.putExtra("type", "login");
                 startActivity(I);
             } else {
                 Toast.makeText(Login.this, "Login to continue", Toast.LENGTH_SHORT).show();
@@ -66,7 +67,9 @@ public class Login extends AppCompatActivity {
                                     "SignUp unsuccessful: " + task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         } else {
-                            startActivity(new Intent(Login.this, StandByAssistant.class));
+                            Intent intent = new Intent(Login.this, StandByAssistant.class);
+                            intent.putExtra("type", "login");
+                            startActivity(intent);
                         }
                     }
                 });

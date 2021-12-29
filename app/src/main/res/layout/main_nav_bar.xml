@@ -48,7 +48,7 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:orientation="horizontal"
-        android:onClick="" >
+        android:onClick="clickEditProfile" >
 
         <TextView
             android:layout_width="wrap_content"

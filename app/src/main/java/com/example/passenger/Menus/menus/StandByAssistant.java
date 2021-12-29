@@ -27,8 +27,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Random;
 
 public class StandByAssistant extends AppCompatActivity {
     private boolean mute;
@@ -47,6 +49,22 @@ public class StandByAssistant extends AppCompatActivity {
     private TextToSpeech tts = null;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private String relation = null;
+    private ArrayList<String> falasAmiga = new ArrayList<String>() {
+        {
+            add("Olá, fico feliz em ver-te");
+            add("Que bom ter-te aqui!");
+            add("Olá, espero ver te aqui mais vezes!");
+        }
+    };
+
+    private ArrayList<String> falasGuia = new ArrayList<String>() {
+        {
+            add("Seja bem-vindo!");
+            add("Estou pronta para ajudar!");
+            add("Olá, estarei aqui para acompanhar!");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,10 +83,16 @@ public class StandByAssistant extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mute) {
                     mute = false;
-                    Toast.makeText(StandByAssistant.this, "Unmuted!", Toast.LENGTH_SHORT).show();
                 } else {
                     mute = true;
-                    Toast.makeText(StandByAssistant.this, "Muted!", Toast.LENGTH_SHORT).show();
+                    if (new Random().nextInt(5) == 2) {
+                        mute = false;
+                        tts.speak("Oh cabrão tás a tentar calar me? Raba raba raba raba raba raba", TextToSpeech.QUEUE_FLUSH, null);
+                        while (tts.isSpeaking()) {
+                            switchCompat.setChecked(false);
+                            Toast.makeText(StandByAssistant.this, "Assistant is talking", Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
@@ -91,18 +115,15 @@ public class StandByAssistant extends AppCompatActivity {
     }
 
     public void initIntentExtras() {
-        if (getIntent().getExtras() == null) {
+        if (getIntent().getExtras().getString("type") != null) {
             initializeVoice();
-            Toast.makeText(StandByAssistant.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
-            Toast.makeText(StandByAssistant.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
-            initializeVoice();
             switchCompat.setChecked(false);
-            Toast.makeText(StandByAssistant.this, "Unmuted!", Toast.LENGTH_SHORT).show();
+            initializeVoice();
         }
     }
 
@@ -110,8 +131,29 @@ public class StandByAssistant extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //TODO meter frases na main menu assistant
-                //tts.speak("cai dji boca no meu bucetão", TextToSpeech.QUEUE_FLUSH, null);
+                FirebaseUser user = mAuth.getCurrentUser();
+                if (getIntent().getExtras().getString("type") != null) {
+                    db.collection("users")
+                            .whereEqualTo("id", user.getUid())
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                            relation = document.get("relation").toString();
+                                            if (relation.equals("amiga")) {
+                                                Log.d("TAG", "amiga");
+                                                tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                            } else {
+                                                Log.d("TAG", "guia");
+                                                tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                }
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -124,6 +166,12 @@ public class StandByAssistant extends AppCompatActivity {
 
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void clickEditProfile(View view) {
+        Intent intent = new Intent(StandByAssistant.this, EditProfile.class);
+        intent.putExtra("mute", String.valueOf(mute));
+        startActivityForResult(intent, 0);
     }
 
     public void clickSair(View view) {

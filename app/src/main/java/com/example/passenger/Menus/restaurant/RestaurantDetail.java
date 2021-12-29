@@ -12,21 +12,32 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.passenger.Menus.menus.EditProfile;
 import com.example.passenger.Menus.menus.MainActivity;
 import com.example.passenger.Menus.menus.StandByAssistant;
 import com.example.passenger.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Locale;
+import java.util.Random;
 
 public class RestaurantDetail extends AppCompatActivity {
     private boolean mute;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private Button queroIr;
     private DrawerLayout drawerLayout;
     private SwitchCompat switchCompat;
@@ -42,12 +53,16 @@ public class RestaurantDetail extends AppCompatActivity {
     private double longitude;
     private double latitude_place;
     private double longitude_place;
+    private String alergia = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_restaurant_item_detail);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         initViews();
+        getAlergia();
         initIntentExtras();
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -55,11 +70,14 @@ public class RestaurantDetail extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mute) {
                     mute = false;
-                    Toast.makeText(RestaurantDetail.this, "Unmuted!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     mute = true;
-                    Toast.makeText(RestaurantDetail.this, "Muted!", Toast.LENGTH_SHORT).show();
+                    if (new Random().nextInt(10) == 5) {
+                        mute = false;
+                        Toast.makeText(RestaurantDetail.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        switchCompat.setChecked(false);
+                    }
                 }
             }
         });
@@ -67,6 +85,12 @@ public class RestaurantDetail extends AppCompatActivity {
         queroIr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mute) {
+                    tts.speak("Bom apetite! Cuidado com a alergia a " + alergia, TextToSpeech.QUEUE_FLUSH, null);
+                    while (tts.isSpeaking()) {
+                        Toast.makeText(RestaurantDetail.this, "Assistant is talking", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 Intent navigation = new Intent(Intent.ACTION_VIEW, Uri
                         .parse("http://maps.google.com/maps?saddr="
                                 + latitude + "," + longitude +
@@ -106,16 +130,13 @@ public class RestaurantDetail extends AppCompatActivity {
         //voice
         if (getIntent().getExtras() == null) {
             initializeVoice();
-            Toast.makeText(RestaurantDetail.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
-            Toast.makeText(RestaurantDetail.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
             initializeVoice();
             switchCompat.setChecked(false);
-            Toast.makeText(RestaurantDetail.this, "Unmuted!", Toast.LENGTH_SHORT).show();
         }
 
         //Name
@@ -216,8 +237,6 @@ public class RestaurantDetail extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //TODO meter frases na main menu assistant
-                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -230,6 +249,12 @@ public class RestaurantDetail extends AppCompatActivity {
 
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void clickEditProfile(View view) {
+        Intent intent = new Intent(RestaurantDetail.this, EditProfile.class);
+        intent.putExtra("mute", String.valueOf(mute));
+        startActivityForResult(intent, 0);
     }
 
     public void clickExit(View view) {
@@ -249,6 +274,23 @@ public class RestaurantDetail extends AppCompatActivity {
         Intent intent = new Intent(RestaurantDetail.this, MainActivity.class);
         FirebaseAuth.getInstance().signOut();
         startActivity(intent);
+    }
+
+    public void getAlergia() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        db.collection("users")
+                .whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                alergia = document.get("alergia_alimentar").toString();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

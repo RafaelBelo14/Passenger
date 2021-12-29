@@ -21,14 +21,23 @@ import com.example.passenger.Menus.api.GoogleApiRetrofit;
 import com.example.passenger.Menus.api.GoogleLudicasAdapter;
 import com.example.passenger.Menus.api.GoogleResponse;
 import com.example.passenger.Menus.api.Item;
+import com.example.passenger.Menus.menus.EditProfile;
 import com.example.passenger.Menus.menus.MainActivity;
 import com.example.passenger.Menus.menus.MainMenuAssistant;
 import com.example.passenger.Menus.menus.StandByAssistant;
 import com.example.passenger.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -49,12 +58,32 @@ public class LudicasList extends AppCompatActivity {
     private final static String RADIUS = "1000";
     private final static String TYPE_RESTAURANT = "night_club";
     private TextToSpeech tts = null;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private String relation = null;
     private GoogleLudicasAdapter adapter;
+    private ArrayList<String> falasAmiga = new ArrayList<String>() {
+        {
+            add("Estás com vontade de te divertir um pouco? Tenho aqui uma lista perfeita para ti!");
+            add("Precisas de espairecer um pouco? Vamos divertir-nos!");
+            add("Tantas opções incríveis! Vamos aproveitar!");
+        }
+    };
+
+    private ArrayList<String> falasGuia = new ArrayList<String>() {
+        {
+            add("Aqui pode encontrar uma lista com as atividades lúdicas mais próximas.");
+            add("Se atividades para descontrair é o que pretende, aqui tem uma lista com várias opções!");
+            add("Nas proximidades existem inúmeras locais que lhe irão proporcionar bastante diversão, escolha uma!");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_ludicas_list);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         initViews();
         initIntentExtras();
         makeGithubSearchQuery();
@@ -65,11 +94,14 @@ public class LudicasList extends AppCompatActivity {
                 if (mute) {
                     mute = false;
                     adapter.setMute(false);
-                    Toast.makeText(LudicasList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
                 } else {
                     mute = true;
                     adapter.setMute(true);
-                    Toast.makeText(LudicasList.this, "Muted!", Toast.LENGTH_SHORT).show();
+                    if (new Random().nextInt(10) == 5) {
+                        mute = false;
+                        Toast.makeText(LudicasList.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        switchCompat.setChecked(false);
+                    }
                 }
             }
         });
@@ -86,16 +118,13 @@ public class LudicasList extends AppCompatActivity {
     public void initIntentExtras() {
         if (getIntent().getExtras() == null) {
             initializeVoice();
-            Toast.makeText(LudicasList.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
-            Toast.makeText(LudicasList.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
             initializeVoice();
             switchCompat.setChecked(false);
-            Toast.makeText(LudicasList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -103,8 +132,27 @@ public class LudicasList extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //TODO meter frases na main menu assistant
-                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
+                FirebaseUser user = mAuth.getCurrentUser();
+                db.collection("users")
+                        .whereEqualTo("id", user.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        relation = document.get("relation").toString();
+                                        if (relation.equals("amiga")) {
+                                            Log.d("TAG", "amiga");
+                                            tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        } else {
+                                            Log.d("TAG", "guia");
+                                            tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        }
+                                    }
+                                }
+                            }
+                        });
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -117,6 +165,12 @@ public class LudicasList extends AppCompatActivity {
 
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void clickEditProfile(View view) {
+        Intent intent = new Intent(LudicasList.this, EditProfile.class);
+        intent.putExtra("mute", String.valueOf(mute));
+        startActivityForResult(intent, 0);
     }
 
     public void clickExit(View view) {

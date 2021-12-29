@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/layout"
+    tools:context=".Menus.menus.MainActivity">
+
+    <ImageView
+        android:id="@+id/back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/back"
+        android:onClick="clickBack"/>
+
+    <TextView
+        android:id="@+id/editTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/back"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:fontFamily="@font/hind_semibold"
+        android:text="Editar Perfil"
+        android:textColor="@color/white"
+        android:textSize="40dp" />
+
+    <LinearLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/editTitle"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/editRelationAmiga"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:buttonTint="@color/edit_text"
+                android:text="Amigável"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_choice" />
+            <RadioButton
+                android:id="@+id/editRelationGuia"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/edit_text"
+                android:text="Apenas guia"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_choice" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/line2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/line1"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Nome"
+            android:gravity="left"
+            android:textColor="@color/button_entrar"
+            android:textSize="@dimen/text_body"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="NestedWeights,RtlHardcoded" />
+
+        <EditText
+            android:id="@+id/editInputName"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/hind_regular"
+            android:hint="Nome"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_edittext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/line2"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editAlergia"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Alergia"
+            android:gravity="left"
+            android:textColor="@color/button_entrar"
+            android:textSize="@dimen/text_body"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="NestedWeights,RtlHardcoded" />
+
+        <EditText
+            android:id="@+id/editInputAlergia"
+            android:layout_width="fill_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edittext_background"
+            android:fontFamily="@font/hind_regular"
+            android:hint="Alergia"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_edittext" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/line3"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editHoraAlmoco"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hora de Almoço"
+            android:gravity="left"
+            android:textColor="@color/button_entrar"
+            android:textSize="@dimen/text_body"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="NestedWeights,RtlHardcoded" />
+
+        <TimePicker
+            android:id="@+id/editTimePickerAlmoco"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:theme="@style/MyTimePickerDialogStyle" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/line4"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editHoraJantar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hora de Jantar"
+            android:gravity="left"
+            android:textColor="@color/button_entrar"
+            android:textSize="@dimen/text_body"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="NestedWeights,RtlHardcoded" />
+
+        <TimePicker
+            android:id="@+id/editTimePickerJantar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:theme="@style/MyTimePickerDialogStyle" />
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/line6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/line5"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/editHoraDeitar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Hora de Deitar"
+            android:gravity="left"
+            android:textColor="@color/button_entrar"
+            android:textSize="@dimen/text_body"
+            android:fontFamily="@font/hind_semibold"
+            tools:ignore="NestedWeights,RtlHardcoded" />
+
+        <TimePicker
+            android:id="@+id/editTimePickerDeitar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:timePickerMode="spinner"
+            android:theme="@style/MyTimePickerDialogStyle" />
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/queroIrButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/line6"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="50dp"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/hind_regular"
+        android:gravity="center"
+        android:text="Guardar"
+        android:onClick="clickSave"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_button" />
+
+
+</RelativeLayout>

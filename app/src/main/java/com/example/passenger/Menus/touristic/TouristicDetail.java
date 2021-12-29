@@ -12,18 +12,28 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.passenger.Menus.menus.EditProfile;
 import com.example.passenger.Menus.menus.MainActivity;
 import com.example.passenger.Menus.menus.StandByAssistant;
 import com.example.passenger.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Random;
 
 public class TouristicDetail extends AppCompatActivity {
     private boolean mute;
@@ -42,12 +52,25 @@ public class TouristicDetail extends AppCompatActivity {
     private double longitude;
     private double latitude_place;
     private double longitude_place;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+    private String relation = null;
+    private ArrayList<String> falasAmiga = new ArrayList<String>() {
+        {
+            add("Adorei a escolha! Boa viagem até lá!");
+            add("Uhhh, estou bastante curiosa para ver como é!");
+            add("Gostei! Quando chegares tira bastantes fotos!");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_touristic_item_detail);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         initViews();
+        getRelacion();
         initIntentExtras();
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -55,11 +78,14 @@ public class TouristicDetail extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (mute) {
                     mute = false;
-                    Toast.makeText(TouristicDetail.this, "Unmuted!", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     mute = true;
-                    Toast.makeText(TouristicDetail.this, "Muted!", Toast.LENGTH_SHORT).show();
+                    if (new Random().nextInt(10) == 5) {
+                        mute = false;
+                        Toast.makeText(TouristicDetail.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        switchCompat.setChecked(false);
+                    }
                 }
             }
         });
@@ -67,6 +93,14 @@ public class TouristicDetail extends AppCompatActivity {
         queroIr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!mute) {
+                    if (relation.equals("amiga")) {
+                        tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                    }
+                    while (tts.isSpeaking()) {
+                        Toast.makeText(TouristicDetail.this, "Assistant is talking", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 Intent navigation = new Intent(Intent.ACTION_VIEW, Uri
                         .parse("http://maps.google.com/maps?saddr="
                                 + latitude + "," + longitude +
@@ -106,16 +140,13 @@ public class TouristicDetail extends AppCompatActivity {
         //voice
         if (getIntent().getExtras() == null) {
             initializeVoice();
-            Toast.makeText(TouristicDetail.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
-            Toast.makeText(TouristicDetail.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
             initializeVoice();
             switchCompat.setChecked(false);
-            Toast.makeText(TouristicDetail.this, "Unmuted!", Toast.LENGTH_SHORT).show();
         }
 
         //Name
@@ -216,8 +247,6 @@ public class TouristicDetail extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //TODO meter frases na main menu assistant
-                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -230,6 +259,12 @@ public class TouristicDetail extends AppCompatActivity {
 
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void clickEditProfile(View view) {
+        Intent intent = new Intent(TouristicDetail.this, EditProfile.class);
+        intent.putExtra("mute", String.valueOf(mute));
+        startActivityForResult(intent, 0);
     }
 
     public void clickExit(View view) {
@@ -249,6 +284,23 @@ public class TouristicDetail extends AppCompatActivity {
         Intent intent = new Intent(TouristicDetail.this, MainActivity.class);
         FirebaseAuth.getInstance().signOut();
         startActivity(intent);
+    }
+
+    public void getRelacion() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        db.collection("users")
+                .whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                relation = document.get("relation").toString();
+                            }
+                        }
+                    }
+                });
     }
 
     @Override

@@ -21,14 +21,23 @@ import com.example.passenger.Menus.api.GoogleApiRetrofit;
 import com.example.passenger.Menus.api.GoogleResponse;
 import com.example.passenger.Menus.api.GoogleRestaurantAdapter;
 import com.example.passenger.Menus.api.Item;
+import com.example.passenger.Menus.menus.EditProfile;
 import com.example.passenger.Menus.menus.MainActivity;
 import com.example.passenger.Menus.menus.MainMenuAssistant;
 import com.example.passenger.Menus.menus.StandByAssistant;
 import com.example.passenger.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -49,12 +58,32 @@ public class RestaurantList extends AppCompatActivity {
     private final static String RADIUS = "500";
     private final static String TYPE_RESTAURANT = "restaurant";
     private TextToSpeech tts = null;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private GoogleRestaurantAdapter adapter;
+    private String relation = null;
+    private ArrayList<String> falasAmiga = new ArrayList<String>() {
+        {
+            add("Hum, estou a ver que estás com fome. Tens aqui os restaurantes mais perto de ti.");
+            add("Existem imensas opções boas perto de ti, escolhe um bom restaurante para irmos.");
+            add("Também estava com fome, o que queres comer?");
+        }
+    };
+
+    private ArrayList<String> falasGuia = new ArrayList<String>() {
+        {
+            add("Apresento-lhe a lista de restaurantes mais próximos.");
+            add("Agora pode escolher o restaurante que mais gostar.");
+            add("Escolha o restaurante que achar melhor.");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_restaurant_list);
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
         initViews();
         initIntentExtras();
         makeGithubSearchQuery();
@@ -65,11 +94,14 @@ public class RestaurantList extends AppCompatActivity {
                 if (mute) {
                     mute = false;
                     adapter.setMute(false);
-                    Toast.makeText(RestaurantList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
                 } else {
                     mute = true;
                     adapter.setMute(true);
-                    Toast.makeText(RestaurantList.this, "Muted!", Toast.LENGTH_SHORT).show();
+                    if (new Random().nextInt(10) == 5) {
+                        mute = false;
+                        Toast.makeText(RestaurantList.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        switchCompat.setChecked(false);
+                    }
                 }
             }
         });
@@ -86,16 +118,13 @@ public class RestaurantList extends AppCompatActivity {
     public void initIntentExtras() {
         if (getIntent().getExtras() == null) {
             initializeVoice();
-            Toast.makeText(RestaurantList.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
-            Toast.makeText(RestaurantList.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
             initializeVoice();
             switchCompat.setChecked(false);
-            Toast.makeText(RestaurantList.this, "Unmuted!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -103,8 +132,27 @@ public class RestaurantList extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                //TODO meter frases na main menu assistant
-                //tts.speak("Come me o cu", TextToSpeech.QUEUE_FLUSH, null);
+                FirebaseUser user = mAuth.getCurrentUser();
+                    db.collection("users")
+                        .whereEqualTo("id", user.getUid())
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document : task.getResult()) {
+                                        relation = document.get("relation").toString();
+                                        if (relation.equals("amiga")) {
+                                            Log.d("TAG", "amiga");
+                                            tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        } else {
+                                            Log.d("TAG", "guia");
+                                            tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        }
+                                    }
+                                }
+                            }
+                        });
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -123,6 +171,12 @@ public class RestaurantList extends AppCompatActivity {
 
     public static void openDrawer(DrawerLayout drawerLayout) {
         drawerLayout.openDrawer(GravityCompat.END);
+    }
+
+    public void clickEditProfile(View view) {
+        Intent intent = new Intent(RestaurantList.this, EditProfile.class);
+        intent.putExtra("mute", String.valueOf(mute));
+        startActivityForResult(intent, 0);
     }
 
     public void clickExit(View view) {

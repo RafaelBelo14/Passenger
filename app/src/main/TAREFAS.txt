@@ -1,8 +1,8 @@
-2 - ** - Frases amigáveis e de guia
-3 - ** Layout de perfil editável
-4 - * Quando escolhe um restaurante para mostrar mapa, assistente avisa sobre alergia
-5 - ** Quando desabilitamos a assistente, ela tem um prob de voltar a ligar
-6 - **** - Notificações
-
-3 - (Opcional) Vibração quando a asssistente tá feliz
-4 - (Opcional) Animar a imagem da a assistente a falar
+1 - Frases amigáveis e de guia (por mais)
+2 - Ver o texto das configurações
+3 - Por mais frases no detalhes do restaurante
+4 - Frases de quando a assistente se liga sozinha
+5 - Mudar tudo para português
+6 - Verficar se se tira o menu das listas
+7 - Adicionar frases quando não há nada na lista
+8 - Ver frases de popups

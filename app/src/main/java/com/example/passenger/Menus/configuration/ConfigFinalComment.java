@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.passenger.Menus.menus.Login;
 import com.example.passenger.Menus.menus.StandByAssistant;
 import com.example.passenger.R;
 
@@ -35,6 +36,7 @@ public class ConfigFinalComment extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ConfigFinalComment.this, StandByAssistant.class);
+                intent.putExtra("type", "register");
                 startActivity(intent);
             }
         });
