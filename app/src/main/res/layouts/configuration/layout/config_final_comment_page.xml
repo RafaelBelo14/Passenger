@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
             android:gravity="center"
-            android:text="Ah! Já sinto que te conheço melhor.\nConsigo sentir a nossa amizade a crescer meu amigo! Espero ser a melhor companheira de viagem que\nalguma vez tiveste"
+            android:text="Ah! Já sinto que te conheço melhor.\nConsigo sentir a nossa amizade a crescer meu amigo! Espero ser a melhor companheira de viagem que alguma vez tiveste"
             android:textColor="@color/white"
             android:textSize="@dimen/text_body" />
 

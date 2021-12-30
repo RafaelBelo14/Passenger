@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/hind_regular"
             android:gravity="center"
-            android:text="Oh que pena...estarei atenta às sugestões\nde comida. Não quero que passes mal!"
+            android:text="Oh que pena...estarei atenta às sugestões de comida. Não quero que passes mal!"
             android:textColor="@color/white"
             android:textSize="@dimen/text_body" />
 

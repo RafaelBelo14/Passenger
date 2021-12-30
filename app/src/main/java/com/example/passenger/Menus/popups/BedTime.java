@@ -1,12 +1,10 @@
 package com.example.passenger.Menus.popups;
 
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,7 +15,6 @@ import java.util.Locale;
 public class BedTime extends AppCompatActivity {
     private TextToSpeech tts = null;
     private TextView hora;
-    private LocationManager locationManager;
     private boolean mute;
 
     @Override
@@ -32,14 +29,11 @@ public class BedTime extends AppCompatActivity {
     public void initIntentExtras() {
         if (getIntent().getExtras() == null) {
             initializeVoice();
-            Toast.makeText(BedTime.this, "No information about assistent voice", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
-            Toast.makeText(BedTime.this, "Muted!", Toast.LENGTH_SHORT).show();
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
             initializeVoice();
-            Toast.makeText(BedTime.this, "Unmuted!", Toast.LENGTH_SHORT).show();
         }
 
         hora.setText(getIntent().getExtras().getString("bedTime"));
@@ -49,7 +43,7 @@ public class BedTime extends AppCompatActivity {
         tts = new TextToSpeech(this, initStatus -> {
             if (initStatus == TextToSpeech.SUCCESS) {
                 tts.setLanguage(new Locale("pt", "POR"));
-                tts.speak("Oh chavalo, tá na hora de ir dormir!", TextToSpeech.QUEUE_FLUSH, null);
+                tts.speak("Está na hora de ir dormir!", TextToSpeech.QUEUE_FLUSH, null);
             } else {
                 Log.d("TAG", "Can't initialize TextToSpeech");
             }
@@ -64,18 +58,27 @@ public class BedTime extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        if (tts != null) {
+            tts.stop();
+        }
         finish();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
         finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (tts != null) {
+            tts.stop();
+        }
         finish();
     }
 }

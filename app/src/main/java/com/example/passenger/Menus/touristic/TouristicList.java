@@ -78,6 +78,22 @@ public class TouristicList extends AppCompatActivity {
         }
     };
 
+    private ArrayList<String> falasAmigaNoItems = new ArrayList<String>() {
+        {
+            add("Oh, não há nada perto de ti, anda um pouco e tenta de novo.");
+            add("Ora bolas, não há nada perto de ti, anda mais um pouco e tenta outra vez.");
+            add("Não há atrações turisticas perto de ti, anda mais um pouco para encontrares algo!");
+        }
+    };
+
+    private ArrayList<String> falasGuiaNoItems = new ArrayList<String>() {
+        {
+            add("Não há atrações turisticas por perto.");
+            add("Aqui perto não há atrações turisticas.");
+            add("Infelizmente, não há atrações turisticas perto de si.");
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,13 +133,11 @@ public class TouristicList extends AppCompatActivity {
 
     public void initIntentExtras() {
         if (getIntent().getExtras() == null) {
-            initializeVoice();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
-            initializeVoice();
             switchCompat.setChecked(false);
         }
     }
@@ -142,12 +156,24 @@ public class TouristicList extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         relation = document.get("relation").toString();
-                                        if (relation.equals("amiga")) {
-                                            Log.d("TAG", "amiga");
-                                            tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
-                                        } else {
-                                            Log.d("TAG", "guia");
-                                            tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        if (!mute) {
+                                            if (errorMessage.getVisibility() == View.INVISIBLE) {
+                                                if (relation.equals("amiga")) {
+                                                    Log.d("TAG", "amiga");
+                                                    tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                } else {
+                                                    Log.d("TAG", "guia");
+                                                    tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                }
+                                            } else {
+                                                if (relation.equals("amiga")) {
+                                                    Log.d("TAG", "amiga");
+                                                    tts.speak(falasAmigaNoItems.get(new Random().nextInt(falasAmigaNoItems.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                } else {
+                                                    Log.d("TAG", "guia");
+                                                    tts.speak(falasGuiaNoItems.get(new Random().nextInt(falasGuiaNoItems.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -207,6 +233,14 @@ public class TouristicList extends AppCompatActivity {
         drawerLayout.closeDrawer(GravityCompat.END);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
+    }
+
     private void makeGithubSearchQuery() {
         OkHttpClient client = getOkHttpClient();
         Retrofit retrofit = getRetrofit(client);
@@ -218,15 +252,21 @@ public class TouristicList extends AppCompatActivity {
             public void onResponse(Call<GoogleResponse> call, Response<GoogleResponse> response) {
                 if (response.isSuccessful()) {
                     int statusCode = response.code();
-                    System.out.println(statusCode);
-                    printResults(response.body().getItemList());
-                    showErrorMessage();
+                    Log.i("STATUS CODE", String.valueOf(statusCode));
+                    if (response.body().getItemList().isEmpty()) {
+                        showErrorMessage();
+                    } else {
+                        printResults(response.body().getItemList());
+                        showTouristic();
+                    }
+                    initializeVoice();
                 }
             }
 
             @Override
             public void onFailure(Call<GoogleResponse> call, Throwable t) {
                 showErrorMessage();
+                initializeVoice();
                 t.printStackTrace();
             }
         });

@@ -32,7 +32,6 @@ public class Login extends AppCompatActivity {
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
             if (user != null) {
-                Toast.makeText(Login.this, "User logged in ", Toast.LENGTH_SHORT).show();
                 Intent I = new Intent(Login.this, StandByAssistant.class);
                 I.putExtra("type", "login");
                 startActivity(I);

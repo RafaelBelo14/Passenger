@@ -55,7 +55,7 @@ public class RestaurantList extends AppCompatActivity {
     private RecyclerView dataListView;
     private final static String URL_GOOGLE = "https://maps.googleapis.com/maps/api/";
     private final static String KEY = "AIzaSyBN0JoU7O597v0dOTCJ-oINVvoxe9BzAAM";
-    private final static String RADIUS = "500";
+    private final static String RADIUS = "1000";
     private final static String TYPE_RESTAURANT = "restaurant";
     private TextToSpeech tts = null;
     private FirebaseAuth mAuth;
@@ -75,6 +75,22 @@ public class RestaurantList extends AppCompatActivity {
             add("Apresento-lhe a lista de restaurantes mais próximos.");
             add("Agora pode escolher o restaurante que mais gostar.");
             add("Escolha o restaurante que achar melhor.");
+        }
+    };
+
+    private ArrayList<String> falasAmigaNoItems = new ArrayList<String>() {
+        {
+            add("Oh, não há nada perto de ti, anda um pouco e tenta de novo.");
+            add("Ora bolas, não há nada perto de ti, anda mais um pouco e tenta outra vez.");
+            add("Não há restaurantes perto de ti, anda mais um pouco que já encontramos algum restaurante.");
+        }
+    };
+
+    private ArrayList<String> falasGuiaNoItems = new ArrayList<String>() {
+        {
+            add("Não há restaurantes por perto.");
+            add("Aqui perto não há restaurantes.");
+            add("Infelizmente, não há restaurantes perto de si.");
         }
     };
 
@@ -117,13 +133,11 @@ public class RestaurantList extends AppCompatActivity {
 
     public void initIntentExtras() {
         if (getIntent().getExtras() == null) {
-            initializeVoice();
         } else if (getIntent().getExtras().getString("mute").equals("true")) {
             mute = true;
             switchCompat.setChecked(true);
         } else if (getIntent().getExtras().getString("mute").equals("false")) {
             mute = false;
-            initializeVoice();
             switchCompat.setChecked(false);
         }
     }
@@ -142,12 +156,24 @@ public class RestaurantList extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     for (QueryDocumentSnapshot document : task.getResult()) {
                                         relation = document.get("relation").toString();
-                                        if (relation.equals("amiga")) {
-                                            Log.d("TAG", "amiga");
-                                            tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
-                                        } else {
-                                            Log.d("TAG", "guia");
-                                            tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                        if (!mute) {
+                                            if (errorMessage.getVisibility() == View.INVISIBLE) {
+                                                if (relation.equals("amiga")) {
+                                                    Log.d("TAG", "amiga");
+                                                    tts.speak(falasAmiga.get(new Random().nextInt(falasAmiga.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                } else {
+                                                    Log.d("TAG", "guia");
+                                                    tts.speak(falasGuia.get(new Random().nextInt(falasGuia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                }
+                                            } else {
+                                                if (relation.equals("amiga")) {
+                                                    Log.d("TAG", "amiga");
+                                                    tts.speak(falasAmigaNoItems.get(new Random().nextInt(falasAmigaNoItems.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                } else {
+                                                    Log.d("TAG", "guia");
+                                                    tts.speak(falasGuiaNoItems.get(new Random().nextInt(falasGuiaNoItems.size())), TextToSpeech.QUEUE_FLUSH, null);
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -207,6 +233,14 @@ public class RestaurantList extends AppCompatActivity {
         drawerLayout.closeDrawer(GravityCompat.END);
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
+    }
+
     private void makeGithubSearchQuery() {
         OkHttpClient client = getOkHttpClient();
         Retrofit retrofit = getRetrofit(client);
@@ -218,9 +252,13 @@ public class RestaurantList extends AppCompatActivity {
             public void onResponse(Call<GoogleResponse> call, Response<GoogleResponse> response) {
                 if (response.isSuccessful()) {
                     int statusCode = response.code();
-                    System.out.println(statusCode);
-                    printResults(response.body().getItemList());
-                    showRestaurants();
+                    if (response.body().getItemList().isEmpty()) {
+                        showErrorMessage();
+                    } else {
+                        printResults(response.body().getItemList());
+                        showRestaurants();
+                    }
+                    initializeVoice();
                 }
             }
 

@@ -11,6 +11,7 @@
         <entry key="app/src/main/res/drawable-v24/check_box_style.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable-v24/edittext_background.xml" value="0.40520833333333334" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.3260416666666667" />
+        <entry key="app/src/main/res/drawable-v24/radio_button.xml" value="0.1388888888888889" />
         <entry key="app/src/main/res/drawable/bottom_up_anim.xml" value="0.26614583333333336" />
         <entry key="app/src/main/res/drawable/button_choice_activity.xml" value="0.4197916666666667" />
         <entry key="app/src/main/res/drawable/check_box_style.xml" value="0.40520833333333334" />
@@ -78,9 +79,11 @@
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_name_page.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_refeicoes_page.xml" value="0.12864583333333332" />
         <entry key="app/src/main/res/layouts/configuration/layout/scroll_config_relation_page.xml" value="0.12864583333333332" />
+        <entry key="app/src/main/res/layouts/ludicas/drawable/ic_baseline_check_box_24.xml" value="0.2984375" />
         <entry key="app/src/main/res/layouts/ludicas/drawable/ic_baseline_close_24.xml" value="0.3260416666666667" />
         <entry key="app/src/main/res/layouts/ludicas/drawable/ic_baseline_menu_24.xml" value="0.2078125" />
         <entry key="app/src/main/res/layouts/ludicas/drawable/ic_star.xml" value="0.3260416666666667" />
+        <entry key="app/src/main/res/layouts/ludicas/drawable/radio_button_unchecked.xml" value="0.2984375" />
         <entry key="app/src/main/res/layouts/ludicas/layout/drawer_ludicas_item_detail.xml" value="0.3098958333333333" />
         <entry key="app/src/main/res/layouts/ludicas/layout/drawer_ludicas_list.xml" value="0.19166666666666668" />
         <entry key="app/src/main/res/layouts/ludicas/layout/item_detail.xml" value="0.3890625" />

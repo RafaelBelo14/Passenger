@@ -63,7 +63,9 @@
                     android:buttonTint="@color/edit_text"
                     android:text="Amigável"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_choice" />
+                    android:textSize="@dimen/text_choice"
+                    android:paddingLeft="10sp"
+                    android:button="@drawable/radio_button"/>
                 <RadioButton
                     android:id="@+id/guia"
                     android:layout_width="wrap_content"
@@ -71,7 +73,9 @@
                     android:buttonTint="@color/edit_text"
                     android:text="Apenas guia"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/text_choice" />
+                    android:textSize="@dimen/text_choice"
+                    android:paddingLeft="10sp"
+                    android:button="@drawable/radio_button"/>
 
             </RadioGroup>
 

@@ -42,7 +42,7 @@
             android:background="@drawable/round_button_start"
             android:elevation="8dp"
             android:fontFamily="@font/hind_regular"
-            android:text="Start"
+            android:text="Iniciar"
             android:textColor="@color/white"
             android:textSize="@dimen/text_button" />
 

@@ -42,7 +42,7 @@
             android:layout_marginBottom="10dp"
             android:fontFamily="@font/hind_regular"
             android:gravity="center"
-            android:text="Já agora, para ter uma noção da tua rotina,\na que horas costumas ir dormir?"
+            android:text="Já agora, para ter uma noção da tua rotina, a que horas costumas ir dormir?"
             android:textColor="@color/white"
             android:textSize="@dimen/text_body" />
 

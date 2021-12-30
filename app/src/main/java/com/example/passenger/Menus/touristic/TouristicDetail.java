@@ -81,9 +81,11 @@ public class TouristicDetail extends AppCompatActivity {
                 }
                 else {
                     mute = true;
-                    if (new Random().nextInt(10) == 5) {
+                    if (new Random().nextInt(5) == 2) {
                         mute = false;
-                        Toast.makeText(TouristicDetail.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        tts.speak("Vou fingir que clicaste no botão errado!", TextToSpeech.QUEUE_FLUSH, null);
+                        while (tts.isSpeaking()) {
+                        }
                         switchCompat.setChecked(false);
                     }
                 }
@@ -307,5 +309,13 @@ public class TouristicDetail extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         drawerLayout.closeDrawer(GravityCompat.END);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
     }
 }

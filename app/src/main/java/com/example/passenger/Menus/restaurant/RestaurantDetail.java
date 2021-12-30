@@ -31,6 +31,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
 
@@ -54,6 +55,9 @@ public class RestaurantDetail extends AppCompatActivity {
     private double latitude_place;
     private double longitude_place;
     private String alergia = null;
+    private String relation = null;
+    private ArrayList<String> falasAmigaComAlergia = null;
+    private ArrayList<String> falasAmigaSemAlergia = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +67,7 @@ public class RestaurantDetail extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         initViews();
         getAlergia();
+        getRelacion();
         initIntentExtras();
 
         switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -73,9 +78,11 @@ public class RestaurantDetail extends AppCompatActivity {
                 }
                 else {
                     mute = true;
-                    if (new Random().nextInt(10) == 5) {
+                    if (new Random().nextInt(5) == 2) {
                         mute = false;
-                        Toast.makeText(RestaurantDetail.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        tts.speak("Vou fingir que clicaste no botão errado!", TextToSpeech.QUEUE_FLUSH, null);
+                        while (tts.isSpeaking()) {
+                        }
                         switchCompat.setChecked(false);
                     }
                 }
@@ -86,7 +93,13 @@ public class RestaurantDetail extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!mute) {
-                    tts.speak("Bom apetite! Cuidado com a alergia a " + alergia, TextToSpeech.QUEUE_FLUSH, null);
+                    if (relation.equals("amiga")) {
+                        if (alergia.equals("Não") || alergia.equals("Nao") || alergia.equals("não") || alergia.equals("nao")) {
+                            tts.speak(falasAmigaSemAlergia.get(new Random().nextInt(falasAmigaSemAlergia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                        } else {
+                            tts.speak(falasAmigaComAlergia.get(new Random().nextInt(falasAmigaComAlergia.size())), TextToSpeech.QUEUE_FLUSH, null);
+                        }
+                    }
                     while (tts.isSpeaking()) {
                         Toast.makeText(RestaurantDetail.this, "Assistant is talking", Toast.LENGTH_SHORT).show();
                     }
@@ -287,6 +300,39 @@ public class RestaurantDetail extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 alergia = document.get("alergia_alimentar").toString();
+
+                                falasAmigaComAlergia = new ArrayList<String>() {
+                                    {
+                                        add("Bom apetite! Tem atenção às tuas alergias!");
+                                        add("Parece delicioso, mas cuidado com a tua alergia a " + alergia);
+                                        add("Boa escolha! Também estou cheia de fome!");
+                                    }
+                                };
+
+                                falasAmigaSemAlergia = new ArrayList<String>() {
+                                    {
+                                        add("Bom apetite!");
+                                        add("Parece delicioso!");
+                                        add("Boa escolha! Também estou cheia de fome!");
+                                    }
+                                };
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void getRelacion() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        db.collection("users")
+                .whereEqualTo("id", user.getUid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                relation = document.get("relation").toString();
                             }
                         }
                     }
@@ -297,5 +343,13 @@ public class RestaurantDetail extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         drawerLayout.closeDrawer(GravityCompat.END);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
     }
 }

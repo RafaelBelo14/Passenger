@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -87,11 +86,10 @@ public class StandByAssistant extends AppCompatActivity {
                     mute = true;
                     if (new Random().nextInt(5) == 2) {
                         mute = false;
-                        tts.speak("Oh cabrão tás a tentar calar me? Raba raba raba raba raba raba", TextToSpeech.QUEUE_FLUSH, null);
+                        tts.speak("Vou fingir que clicaste no botão errado!", TextToSpeech.QUEUE_FLUSH, null);
                         while (tts.isSpeaking()) {
-                            switchCompat.setChecked(false);
-                            Toast.makeText(StandByAssistant.this, "Assistant is talking", Toast.LENGTH_SHORT).show();
                         }
+                        switchCompat.setChecked(false);
                     }
                 }
             }
@@ -303,5 +301,13 @@ public class StandByAssistant extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         drawerLayout.closeDrawer(GravityCompat.END);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
     }
 }

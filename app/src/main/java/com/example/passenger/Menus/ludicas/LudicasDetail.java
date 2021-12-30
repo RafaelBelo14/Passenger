@@ -22,7 +22,6 @@ import com.bumptech.glide.Glide;
 import com.example.passenger.Menus.menus.EditProfile;
 import com.example.passenger.Menus.menus.MainActivity;
 import com.example.passenger.Menus.menus.StandByAssistant;
-import com.example.passenger.Menus.touristic.TouristicDetail;
 import com.example.passenger.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -82,9 +81,11 @@ public class LudicasDetail extends AppCompatActivity {
                 }
                 else {
                     mute = true;
-                    if (new Random().nextInt(10) == 5) {
+                    if (new Random().nextInt(5) == 2) {
                         mute = false;
-                        Toast.makeText(LudicasDetail.this, "Assistant enabled itself!", Toast.LENGTH_SHORT).show();
+                        tts.speak("Vou fingir que clicaste no botão errado!", TextToSpeech.QUEUE_FLUSH, null);
+                        while (tts.isSpeaking()) {
+                        }
                         switchCompat.setChecked(false);
                     }
                 }
@@ -308,5 +309,13 @@ public class LudicasDetail extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         drawerLayout.closeDrawer(GravityCompat.END);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (tts != null) {
+            tts.stop();
+        }
     }
 }
