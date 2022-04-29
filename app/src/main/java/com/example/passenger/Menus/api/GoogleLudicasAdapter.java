@@ -23,7 +23,7 @@ public class GoogleLudicasAdapter extends RecyclerView.Adapter<GoogleLudicasAdap
 
     private final Context context;
     private final List<Item> list;
-    private final static String KEY = "AIzaSyBN0JoU7O597v0dOTCJ-oINVvoxe9BzAAM";
+    private final static String KEY = "API_KEY";
     private String LATITUDE_LONGITUDE;
     private boolean mute;
 
